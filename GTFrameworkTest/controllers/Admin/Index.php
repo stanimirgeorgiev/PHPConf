@@ -6,18 +6,15 @@
  * and open the template in the editor.
  */
 
+namespace Controllers\Admin;
+
 /**
  * Description of Index
  *
  * @author ACER
  */
-
-namespace Controllers;
-
 class Index {
-
-    public function __construct() {
-        echo 'Index is constructed';
+    public function index() {
+        
     }
-
 }

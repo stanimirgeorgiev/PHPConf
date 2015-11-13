@@ -7,17 +7,14 @@
  */
 
 /**
- * Description of Index
+ * Description of Kofa
  *
  * @author ACER
  */
-
 namespace Controllers;
-
-class Index {
-
-    public function __construct() {
-        echo 'Index is constructed';
-    }
-
+class Kofa {
+public function __construct() {
+    echo 'Kofa is constructed';
+}
+public function roro(){}
 }

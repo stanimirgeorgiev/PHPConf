@@ -6,5 +6,5 @@ $cfg['namespaces'] = [
 ];
 
 $cfg['default_controller'] = 'Index11111';
-$cfg['default_method'] = 'Method';
+$cfg['default_method'] = 'method';
 return $cfg;

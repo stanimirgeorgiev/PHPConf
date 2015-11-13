@@ -82,10 +82,8 @@ class App {
     public function run() {
         if ($this->_config->_configFolder == NULL) {
             $this->_config->setConfigFolder('../config');
-            
         }
         $this->_frontController = \GTFramework\FrontController::getInstance();
-        
         $this->_frontController->dispatch();
     }
 

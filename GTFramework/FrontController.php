@@ -11,7 +11,6 @@
  *
  * @author ACER
  */
-
 namespace GTFramework;
 
 class FrontController {
@@ -29,12 +28,20 @@ class FrontController {
         $dc = new \GTFramework\Routers\DefaultRouter();
         $_uri = $dc->getURI();
         $_rc = null;
-//        echo $_uri . '<br>';
         $routes = \GTFramework\App::getInstance()->getConfig()->routes;
+                echo $_uri.'||||||<br />';
+//        '<pre>'.var_dump($routes).'</pre>'.'<br />';
+        var_dump($_uri).'<br />';
         if (is_array($routes) && count($routes) > 0) {
             foreach ($routes as $k => $v) {
-                if (stripos($_uri, $k) === 0 && (stripos($_uri, $k . '/') === 0 || $_uri === $k ) && $v['namespace']) {
-                    $this->ns = $v['namespace'];
+                echo '<pre>' . print_r($k, TRUE) . '</pre>'.'<br />';
+                echo '<pre>' . print_r($v, TRUE) . '</pre>'.'<br />';
+                if (stripos($_uri, $k) === 0 && (stripos($_uri, $k . '/') === 0 || $_uri === $k ) ) {
+//                        echo $_uri.'<br />';
+                    if (isset($v['namespace'])) {
+                        $this->ns = $v['namespace'];
+                        echo $this->ns.'<br />';
+                    }
                     $_uri = substr($_uri, strlen($k) + 1);
                     if (isset($v['controller'])) {
                         $_rc = $v['controller'];
@@ -48,7 +55,6 @@ class FrontController {
         if ($this->ns == NULL && $routes['*']['namespace']) {
             $this->ns = $routes['*']['namespace'];
             if (isset($routes['*']['controller'])) {
-
                 $_rc = $routes['*']['controller'];
             }
         } else if ($this->ns == NULL && !$routes['*']['namespace']) {
@@ -59,41 +65,49 @@ class FrontController {
 //            echo $_uri . '---sub<br>';
         }
         $_params = explode('/', $_uri);
+        echo '<pre>' . print_r($_params, TRUE) . '</pre>'.'<br />';
         if (isset($_params[0]) && trim($_params[0])) {
-//            echo trim($_params[0]) . '----<br>';
-            $this->controller = $_params[0];
+            echo trim($_params[0]) . '----<br>';
+            $this->controller = strtolower($_params[0]);
             unset($_params[0]);
         } else {
             $this->controller = $this->getDefaultControler();
         }
         if (isset($_params[1]) && trim($_params[1])) {
-            $this->method = $_params[1];
+            $this->method = strtolower($_params[1]);
             unset($_params[1]);
         } else {
             $this->method = $this->getDefaultMethod();
         }
         $_params = array_values($_params);
+//        var_dump($_rc).'<br />';
         if ($_rc && is_array($_rc) && isset($_rc[$this->controller]['to'])) {
-            $this->controller = $_rc[$this->controller]['to'];
+            $this->controller = strtolower($_rc[$this->controller]['to']);
+//        echo $this->controller.'<br />';
         }
         if (isset($_rc[$this->controller]['method'][$this->method]) && trim($_rc[$this->controller]['method'][$this->method])) {
-            $this->method = $_rc[$this->controller]['method'][$this->method];
+            $this->method = strtolower($_rc[$this->controller]['method'][$this->method]);
         }
-//        echo '<pre>' . print_r($_params, TRUE) . '<br>' . $this->controller . '<br>' . $this->method . '<br>' . '</pre>';
+      echo '<pre>' . print_r($_params, TRUE) . '<br>' . $this->controller . '<br>' . $this->method . '<br>' . '</pre>';
+        $f = $this->ns.'\\'.ucfirst($this->controller);
+        $newController = new $f();
+        if (!$this->method) {
+        $newController->{$this->method}();
+        }
     }
 
     public function getDefaultControler() {
         $controller = \GTFramework\App::getInstance()->getConfig()->app['default_controller'];
         if (trim($controller)) {
-            return $controller;
+            return strtolower($controller);
         }
-        return 'Index';
+        return 'index';
     }
 
     public function getDefaultMethod() {
         $method = \GTFramework\App::getInstance()->getConfig()->app['default_method'];
         if (trim($method)) {
-            return $method;
+            return strtolower($method);
         }
         return 'index';
     }
