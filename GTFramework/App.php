@@ -36,11 +36,13 @@ class App {
      * *Singleton* via the `new` operator from outside of this class.
      */
     private function __construct() {
+        echo dirname(__FILE__) . DIRECTORY_SEPARATOR.'<br />';
         \GTFramework\Loader::registerNamespace('GTFramework', dirname(__FILE__) . DIRECTORY_SEPARATOR);
+        echo 'popopopo<br />';
         \GTFramework\Loader::registerAutoLoad();
         $this->_config = \GTFramework\Config::getInstance();
     }
-
+    
     /**
      * Private clone method to prevent cloning of the instance of the
      * *Singleton* instance.
@@ -81,7 +83,10 @@ class App {
 
     public function run() {
         if ($this->_config->_configFolder == NULL) {
+            echo $this->_config->_configFolder.'ooooooooooooooo<br />';
             $this->_config->setConfigFolder('../config');
+        echo 'ppppppppppppppppppp<br />';
+            
         }
         $this->_frontController = \GTFramework\FrontController::getInstance();
         
