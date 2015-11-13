@@ -29,7 +29,7 @@ class FrontController {
         $dc = new \GTFramework\Routers\DefaultRouter();
         $_uri = $dc->getURI();
         $_rc = null;
-        echo $_uri . '<br>';
+//        echo $_uri . '<br>';
         $routes = \GTFramework\App::getInstance()->getConfig()->routes;
         if (is_array($routes) && count($routes) > 0) {
             foreach ($routes as $k => $v) {
@@ -56,11 +56,11 @@ class FrontController {
         }
         if (substr($_uri, -1) === '/') {
             $_uri = substr($_uri, 0, -1);
-            echo $_uri . '---sub<br>';
+//            echo $_uri . '---sub<br>';
         }
         $_params = explode('/', $_uri);
         if (isset($_params[0]) && trim($_params[0])) {
-            echo trim($_params[0]) . '----<br>';
+//            echo trim($_params[0]) . '----<br>';
             $this->controller = $_params[0];
             unset($_params[0]);
         } else {
@@ -79,7 +79,7 @@ class FrontController {
         if (isset($_rc[$this->controller]['method'][$this->method]) && trim($_rc[$this->controller]['method'][$this->method])) {
             $this->method = $_rc[$this->controller]['method'][$this->method];
         }
-        echo '<pre>' . print_r($_params, TRUE) . '<br>' . $this->controller . '<br>' . $this->method . '<br>' . '</pre>';
+//        echo '<pre>' . print_r($_params, TRUE) . '<br>' . $this->controller . '<br>' . $this->method . '<br>' . '</pre>';
     }
 
     public function getDefaultControler() {

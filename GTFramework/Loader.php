@@ -39,7 +39,7 @@ final class Loader {
                 //echo str_replace('\\', DIRECTORY_SEPARATOR, $class).'<br>';
 //                echo substr_replace(str_replace('\\', DIRECTORY_SEPARATOR, $class), $value, 0, strlen($key)) . '.php <br>';
                 $file = realpath(substr_replace(str_replace('\\', DIRECTORY_SEPARATOR, $class), $value, 0, strlen($key)) . '.php');
-                echo '| '.$file.' |' . '<hr><br><hr><br>';
+//                echo '| '.$file.' |' . '<hr><br><hr><br>';
 
                 if ($file && is_readable($file)) {
                     include $file;
