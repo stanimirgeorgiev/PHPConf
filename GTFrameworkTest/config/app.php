@@ -7,4 +7,6 @@ $cfg['namespaces'] = [
 
 $cfg['default_controller'] = 'Index11111';
 $cfg['default_method'] = 'method';
+$cfg['default_router'] = 'GetRouter';
+
 return $cfg;

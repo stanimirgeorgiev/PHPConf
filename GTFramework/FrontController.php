@@ -19,33 +19,43 @@ class FrontController {
     private $ns = null;
     private $controller = null;
     private $method = null;
+    private $bundle = null;
+    private $routes = null;
 
     private function __construct() {
         
     }
 
     public function dispatch() {
-        $dc = new \GTFramework\Routers\DefaultRouter();
-        $_uri = $dc->getURI();
+        $defaultRouter = \GTFramework\App::getInstance()->getConfig()->app;
+        echo '<pre>' . print_r($defaultRouter['default_router'], TRUE) . '</pre>'.'<br />';
+        $routerPath = '\\GTFramework\\Routers\\'.$defaultRouter['default_router'];
+        $dr = new $routerPath();
+        echo '<pre>' . print_r($dr, TRUE) . '</pre>'.'<br />';
+        $_uri = $dr->getURI();
         $_rc = null;
-        $routes = \GTFramework\App::getInstance()->getConfig()->routes;
+        $this->routes = \GTFramework\App::getInstance()->getConfig()->routes;
                 echo $_uri.'||||||<br />';
-//        '<pre>'.var_dump($routes).'</pre>'.'<br />';
+        '<pre>'.var_dump($this->routes).'</pre>'.'<br />';
         var_dump($_uri).'<br />';
-        if (is_array($routes) && count($routes) > 0) {
-            foreach ($routes as $k => $v) {
+        if (is_array($this->routes) && count($this->routes) > 0) {
+            foreach ($this->routes as $k => $v) {
                 echo '<pre>' . print_r($k, TRUE) . '</pre>'.'<br />';
                 echo '<pre>' . print_r($v, TRUE) . '</pre>'.'<br />';
-                if (stripos($_uri, $k) === 0 && (stripos($_uri, $k . '/') === 0 || $_uri === $k ) ) {
+                if (stripos(strtolower($_uri), strtolower($k)) === 0 && (stripos(strtolower($_uri), strtolower($k) . '/') === 0 || strtolower($_uri) === strtolower($k) ) ) {
 //                        echo $_uri.'<br />';
                     if (isset($v['namespace'])) {
                         $this->ns = $v['namespace'];
                         echo $this->ns.'<br />';
+                    } else {
+                        throw new \Exception('Namespace is missing in config for the '.$k.' bundle', 500);
                     }
                     $_uri = substr($_uri, strlen($k) + 1);
                     if (isset($v['controller'])) {
                         $_rc = $v['controller'];
                     }
+                    $this->bundle = strtolower($k);
+                    echo $this->bundle.'??????????????????????????????????<br />';
                     break;
                 }
             }
@@ -66,6 +76,7 @@ class FrontController {
         }
         $_params = explode('/', $_uri);
         echo '<pre>' . print_r($_params, TRUE) . '</pre>'.'<br />';
+//        '<pre>'.var_dump($this->routes[$this->bundle]).'</pre>'.'<br />';
         if (isset($_params[0]) && trim($_params[0])) {
             echo trim($_params[0]) . '----<br>';
             $this->controller = strtolower($_params[0]);
@@ -97,6 +108,23 @@ class FrontController {
     }
 
     public function getDefaultControler() {
+        if ($this->bundle != NULL) {
+            if (isset($this->routes[$this->bundle])) {
+                if (isset($this->routes[$this->bundle]['default_controller'])) {
+                    
+            return strtolower(trim($this->routes[$this->bundle]['default_controller']));
+                } else {
+                    throw new \Exception('Default controller must be provided in routes for the '. $this->bundle. ' bundle',500);
+                }
+            } else {
+                if (isset($this->routes[ucfirst($this->bundle)]['default_controller'])) {
+                    
+                return strtolower(trim($this->routes[ucfirst($this->bundle)]['default_controller']));
+                } else {
+                    throw new \Exception('Default controller must be provided in routes for the '. $this->bundle. ' bundle',500);
+                }
+            }
+        }
         $controller = \GTFramework\App::getInstance()->getConfig()->app['default_controller'];
         if (trim($controller)) {
             return strtolower($controller);
@@ -105,6 +133,23 @@ class FrontController {
     }
 
     public function getDefaultMethod() {
+        if ($this->bundle != NULL) {
+            if (isset($this->routes[$this->bundle])) {
+                if (isset($this->routes[$this->bundle]['default_method'])) {
+                    
+            return strtolower(trim($this->routes[$this->bundle]['default_method']));
+                } else {
+                    throw new \Exception('Default method must be provided in routes for the '. $this->bundle. ' bundle',500);
+                }
+            } else {
+                if (isset($this->routes[ucfirst($this->bundle)]['default_method'])) {
+                    
+                return strtolower(trim($this->routes[ucfirst($this->bundle)]['default_method']));
+                } else {
+                    throw new \Exception('Default method must be provided in routes for the '. $this->bundle. ' bundle',500);
+                }
+            }
+        }
         $method = \GTFramework\App::getInstance()->getConfig()->app['default_method'];
         if (trim($method)) {
             return strtolower($method);

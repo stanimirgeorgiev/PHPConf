@@ -14,10 +14,13 @@
 
 namespace GTFramework\Routers;
 
-class DefaultRouter implements \GTFramework\Routers\IRouter {
+class GetRouter implements \GTFramework\Routers\IRouter {
     
     public function getURI() {
+        if ($_GET || $_POST || $_FILES) {
+            echo '<pre>' . print_r($_GET, TRUE) . '</pre>'.'<br />';
         return substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME']) + 1);
+        }
     }
 
 }

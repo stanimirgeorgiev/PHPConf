@@ -18,7 +18,7 @@
  * 
  */
 $defaultBundle = 'administration';
-$newBundle = 'admin';
+$newBundle = 'Admin';
 $newIndex = 'noviqMiIndeks';
 /**
  * $cfg['*']['namespace'] default configuration for the namespace
@@ -29,12 +29,16 @@ $cfg['*']['controller']['mama']['to'] = 'kofa';
 $cfg['*']['controller']['kofa']['method']['koko'] = 'roro';
 
 $cfg[$newBundle]['namespace'] = 'Controllers\Admin';
-$cfg[$newBundle]['controller']['index']['to'] = 'index';
+$cfg[$newBundle]['default_controller'] = 'index';
+$cfg[$newBundle]['default_method'] = 'index';
+$cfg[$newBundle]['controller']['start']['to'] = 'index';
 $cfg[$newBundle]['controller']['index']['method']['new'] = 'index';
 
 $cfg[$defaultBundle]['namespace'] = 'Controllers\Admin';
+$cfg[$defaultBundle]['default_controller'] = 'index';
+$cfg[$defaultBundle]['default_method'] = 'index';
 $cfg[$defaultBundle]['controller']['new']['to'] = 'create';
-$cfg[$defaultBundle]['controller']['index']['to'] = $newIndex;
+$cfg[$defaultBundle]['controller']['ind']['to'] = $newIndex;
 $cfg[$defaultBundle]['controller'][$newIndex]['method']['new'] = '_newMethod';
 $cfg[$defaultBundle]['controller'][$newIndex]['method']['proba'] = 'raboti';
 
