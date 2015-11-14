@@ -3,7 +3,15 @@ include '../../GTFramework/App.php';
 $app = \GTFramework\App::getInstance();
 //echo    "Wvichko do run raboti <br />";
 $app->run();
-
-//foreach ($app->getConfig()->app as $k => $v) {
-//    echo print_r($k).' => '.print_r($v).'<br>';
-//}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Form data</title>
+</head>
+<body>
+    <h1>It's working</h1>
+	
+</body>
+</html>

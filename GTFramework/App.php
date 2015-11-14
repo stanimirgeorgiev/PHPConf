@@ -84,6 +84,7 @@ class App {
             $this->_config->setConfigFolder('../config');
         }
         $this->_frontController = \GTFramework\FrontController::getInstance();
+        $this->_frontController->setRouter(\GTFramework\Routers\DefaultRouter);
         $this->_frontController->dispatch();
     }
 
