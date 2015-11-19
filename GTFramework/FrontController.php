@@ -25,17 +25,17 @@ class FrontController {
     private function __construct() {
         
     }
-    function getRouter() {
+    public function getRouter() {
         return $this->router;
     }
 
-    function setRouter(\GTFramework\Routers\IRouter $router) {
+    public function setRouter(\GTFramework\Routers\IRouter $router) {
         $this->router = $router;
     }
 
         public function dispatch() {
             if ($this->router == NULL) {
-                throw new \Exception('Router is not set properly', 500);
+                throw new \Exception('Router is not set', 500);
             }
 //        $defaultRouter = \GTFramework\App::getInstance()->getConfig()->app;
 //        echo '<pre>' . print_r($defaultRouter['default_router'], TRUE) . '</pre>'.'<br />';

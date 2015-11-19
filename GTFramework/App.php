@@ -25,12 +25,15 @@ class App {
      * @var \GTFramework\Config
      */
     private $_config = null;
+    private $router;
+    private $appConfig;
 
-    /**
+        /**
      *
      * @var \GTFramework\FrontController    
      */
     private $_frontController = null;
+    
     /**
      * Protected constructor to prevent creating a new instance of the
      * *Singleton* via the `new` operator from outside of this class.
@@ -84,11 +87,25 @@ class App {
             $this->_config->setConfigFolder('../config');
         }
         $this->_frontController = \GTFramework\FrontController::getInstance();
-        $this->_frontController->setRouter(\GTFramework\Routers\DefaultRouter);
+        $this->appConfig = \GTFramework\App::getInstance()->getConfig()->app;
+        if (isset($this->appConfig['default_router']) && $this->appConfig['default_router']) {
+            $this->router = '\\GTFramework\\Routers\\'.$this->appConfig['default_router'];
+            $this->_frontController->setRouter(new $this->router);
+            echo '<pre>' . print_r($this->router, TRUE) . '</pre>---!!!---<br />';
+        } else {
+            throw new \Exception('Default Router is not set', 500);
+        }
         $this->_frontController->dispatch();
     }
+    function get_frontController() {
+        return $this->_frontController;
+    }
 
-    /**
+    function set_frontController(\GTFramework\FrontController $_frontController) {
+        $this->_frontController = $_frontController;
+    }
+
+            /**
      * 
      * @return \GTFramework\App
      */

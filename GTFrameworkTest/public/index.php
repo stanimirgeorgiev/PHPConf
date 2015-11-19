@@ -1,7 +1,6 @@
 <?php
 include '../../GTFramework/App.php';
 $app = \GTFramework\App::getInstance();
-//echo    "Wvichko do run raboti <br />";
 $app->run();
 ?>
 <!DOCTYPE html>
