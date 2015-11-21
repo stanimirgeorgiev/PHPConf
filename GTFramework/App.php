@@ -89,9 +89,13 @@ class App {
         $this->_frontController = \GTFramework\FrontController::getInstance();
         $this->appConfig = \GTFramework\App::getInstance()->getConfig()->app;
         if (isset($this->appConfig['default_router']) && $this->appConfig['default_router']) {
+            if (!$this->router) {
             $this->router = '\\GTFramework\\Routers\\'.$this->appConfig['default_router'];
+            } else {
+                $this->router = '\\GTFramework\\Routers\\'.$this->router;
+            }
             $this->_frontController->setRouter(new $this->router);
-            echo '<pre>' . print_r($this->router, TRUE) . '</pre>---!!!---<br />';
+//            echo '<pre>' . print_r($this->router, TRUE) . '</pre>---!!!---<br />';
         } else {
             throw new \Exception('Default Router is not set', 500);
         }
@@ -105,7 +109,16 @@ class App {
         $this->_frontController = $_frontController;
     }
 
-            /**
+    public function getRouterByName() {
+        return $this->router;
+    }
+
+    public function setRouterByName($router) {
+        $this->router = $router;
+    }
+
+    
+    /**
      * 
      * @return \GTFramework\App
      */

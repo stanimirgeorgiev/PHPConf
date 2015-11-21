@@ -6,15 +6,11 @@
  * and open the template in the editor.
  */
 
-namespace Controllers\Admin;
-
 /**
- * Description of Index
  *
  * @author ACER
  */
-class Index {
-    public function index() {
-        echo 'Admin index is here <br />';
-    }
+namespace Controllers;
+interface IController {
+    public function index($params);
 }

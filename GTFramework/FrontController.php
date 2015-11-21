@@ -11,6 +11,7 @@
  *
  * @author ACER
  */
+
 namespace GTFramework;
 
 class FrontController {
@@ -22,9 +23,11 @@ class FrontController {
     private $bundle = null;
     private $routes = null;
     private $router = null;
+
     private function __construct() {
         
     }
+
     public function getRouter() {
         return $this->router;
     }
@@ -33,15 +36,15 @@ class FrontController {
         $this->router = $router;
     }
 
-        public function dispatch() {
-            if ($this->router == NULL) {
-                throw new \Exception('Router is not set', 500);
-            }
+    public function dispatch() {
+        if ($this->router == NULL) {
+            throw new \Exception('Router is not set', 500);
+        }
 //        $defaultRouter = \GTFramework\App::getInstance()->getConfig()->app;
 //        echo '<pre>' . print_r($defaultRouter['default_router'], TRUE) . '</pre>'.'<br />';
 //        $routerPath = '\\GTFramework\\Routers\\'.$defaultRouter['default_router'];
 //        $dr = new $routerPath();
-//        echo '<pre>' . print_r($dr, TRUE) . '</pre>'.'<br />';
+//        echo '<pre>' . print_r($this->router, TRUE) . '</pre>'.'<br />';
         $_uri = $this->router->getURI();
         $_rc = null;
         $this->routes = \GTFramework\App::getInstance()->getConfig()->routes;
@@ -50,17 +53,21 @@ class FrontController {
 //        var_dump($_uri).'<br />';
         if (is_array($this->routes) && count($this->routes) > 0) {
             foreach ($this->routes as $k => $v) {
+//                echo '<pre>' . print_r($_uri, TRUE) . '</pre><br />';
+                $checkIsBundle = explode('/', $_uri)[0];
+//                echo '<pre>' . print_r($checkIsBundle, TRUE) . '</pre><br />';
 //                echo '<pre>' . print_r($k, TRUE) . '</pre>'.'<br />';
 //                echo '<pre>' . print_r($v, TRUE) . '</pre>'.'<br />';
-                if (stripos(strtolower($_uri), strtolower($k)) === 0 && (stripos(strtolower($_uri), strtolower($k) . '/') === 0 || strtolower($_uri) === strtolower($k) ) ) {
+                if (stripos(strtolower($checkIsBundle), strtolower($k)) === 0 && (stripos(strtolower($checkIsBundle), strtolower($k) . '/') === 0 || strtolower($checkIsBundle) === strtolower($k) )) {
 //                        echo $_uri.'<br />';
                     if (isset($v['namespace'])) {
                         $this->ns = $v['namespace'];
 //                        echo $this->ns.'<br />';
                     } else {
-                        throw new \Exception('Namespace is missing in config for the '.$k.' bundle', 500);
+                        throw new \Exception('Namespace is missing in config for the ' . $k . ' bundle', 500);
                     }
                     $_uri = substr($_uri, strlen($k) + 1);
+//                    echo '<pre>-----' . print_r($_uri, TRUE) . '</pre>Urii sled kato sme mahnali dylvinata na osnowniq bundyl<br />';
                     if (isset($v['controller'])) {
                         $_rc = $v['controller'];
                     }
@@ -72,13 +79,13 @@ class FrontController {
         } else {
             throw new \Exception('Missing default routes confiuration', 500);
         }
-        if ($this->ns == NULL && $this->routes['*']['namespace']) {
+        if ($this->ns == NULL && isset($this->routes['*']['namespace'])) {
             $this->ns = $this->routes['*']['namespace'];
             if (isset($this->routes['*']['controller'])) {
                 $_rc = $this->routes['*']['controller'];
             }
-        } else if ($this->ns == NULL && !$this->routes['*']['namespace']) {
-            throw new \Exeption('Default configuration for namespace is missing', 500);
+        } else if ($this->ns == NULL) {
+            throw new \Exception('Default configuration for namespace is missing', 500);
         }
         if (substr($_uri, -1) === '/') {
             $_uri = substr($_uri, 0, -1);
@@ -110,28 +117,30 @@ class FrontController {
             $this->method = strtolower($_rc[$this->controller]['method'][$this->method]);
         }
 //      echo '<pre>' . print_r($_params, TRUE) . '<br>' . $this->controller . '<br>' . $this->method . '<br>' . '</pre>';
-        $f = $this->ns.'\\'.ucfirst($this->controller);
+        $f = $this->ns . '\\' . ucfirst($this->controller);
         $newController = new $f();
-        if (!$this->method) {
-        $newController->{$this->method}();
+        if (method_exists($newController, $this->method)) {
+            $newController->{$this->method}($_params);
+        } else {
+            throw new \Exception('Called nonexistent method: ' . $this->method, 404);
         }
     }
 
     public function getDefaultControler() {
-        if ($this->bundle != NULL && $this->bundle !='*') {
+        if ($this->bundle != NULL && $this->bundle != '*') {
             if (isset($this->routes[$this->bundle])) {
                 if (isset($this->routes[$this->bundle]['default_controller'])) {
-                    
-            return strtolower(trim($this->routes[$this->bundle]['default_controller']));
+
+                    return strtolower(trim($this->routes[$this->bundle]['default_controller']));
                 } else {
-                    throw new \Exception('Default controller must be provided in routes for the '. $this->bundle. ' bundle',500);
+                    throw new \Exception('Default controller must be provided in routes for the ' . $this->bundle . ' bundle', 500);
                 }
             } else {
                 if (isset($this->routes[ucfirst($this->bundle)]['default_controller'])) {
-                    
-                return strtolower(trim($this->routes[ucfirst($this->bundle)]['default_controller']));
+
+                    return strtolower(trim($this->routes[ucfirst($this->bundle)]['default_controller']));
                 } else {
-                    throw new \Exception('Default controller must be provided in routes for the '. $this->bundle. ' bundle',500);
+                    throw new \Exception('Default controller must be provided in routes for the ' . $this->bundle . ' bundle', 500);
                 }
             }
         }
@@ -143,20 +152,20 @@ class FrontController {
     }
 
     public function getDefaultMethod() {
-        if ($this->bundle != NULL && $this->bundle !='*') {
+        if ($this->bundle != NULL && $this->bundle != '*') {
             if (isset($this->routes[$this->bundle])) {
                 if (isset($this->routes[$this->bundle]['default_method'])) {
-                    
-            return strtolower(trim($this->routes[$this->bundle]['default_method']));
+
+                    return strtolower(trim($this->routes[$this->bundle]['default_method']));
                 } else {
-                    throw new \Exception('Default method must be provided in routes for the '. $this->bundle. ' bundle',500);
+                    throw new \Exception('Default method must be provided in routes for the ' . $this->bundle . ' bundle', 500);
                 }
             } else {
                 if (isset($this->routes[ucfirst($this->bundle)]['default_method'])) {
-                    
-                return strtolower(trim($this->routes[ucfirst($this->bundle)]['default_method']));
+
+                    return strtolower(trim($this->routes[ucfirst($this->bundle)]['default_method']));
                 } else {
-                    throw new \Exception('Default method must be provided in routes for the '. $this->bundle. ' bundle',500);
+                    throw new \Exception('Default method must be provided in routes for the ' . $this->bundle . ' bundle', 500);
                 }
             }
         }
@@ -167,6 +176,10 @@ class FrontController {
         return 'index';
     }
 
+    /**
+     * 
+     * @return \GTFramework\FrontController
+     */
     public static function getInstance() {
         if (self::$_instance == null) {
             self::$_instance = new \GTFramework\FrontController();

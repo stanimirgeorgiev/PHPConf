@@ -1,6 +1,8 @@
 <?php
 include '../../GTFramework/App.php';
 $app = \GTFramework\App::getInstance();
+$app->setRouterByName('GetRouter');
+//phpinfo();
 $app->run();
 ?>
 <!DOCTYPE html>
@@ -11,6 +13,9 @@ $app->run();
 </head>
 <body>
     <h1>It's working</h1>
-	
+	<form method="POST" target="">
+		<input type="text" name="KokomirchoPostva" />
+		<input type="submit" name="Submitni be" value="Prashtai"/>
+	</form>
 </body>
 </html>

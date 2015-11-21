@@ -17,10 +17,11 @@ namespace GTFramework\Routers;
 class GetRouter implements \GTFramework\Routers\IRouter {
     
     public function getURI() {
-        if ($_GET || $_POST || $_FILES) {
-            echo '<pre>' . print_r($_GET, TRUE) . '</pre>'.'<br />';
+//        if ($_GET || $_POST || $_FILES) {
+//        echo '<pre>' . print_r($_GET, TRUE) . '</pre>Tova e get router<br />';
+//        echo '<pre>' . print_r($_POST, TRUE) . '</pre>Tova e get router<br />';
         return substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME']) + 1);
-        }
+//        }
     }
 
 }

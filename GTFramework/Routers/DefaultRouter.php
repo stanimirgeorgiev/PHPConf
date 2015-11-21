@@ -17,6 +17,7 @@ namespace GTFramework\Routers;
 class DefaultRouter implements \GTFramework\Routers\IRouter {
     
     public function getURI() {
+//        echo '<pre>' . print_r('Tova e DefaultRouter', TRUE) . '</pre><br />';
         return substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME']) + 1);
     }
 

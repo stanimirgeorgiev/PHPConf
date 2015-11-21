@@ -14,10 +14,10 @@
 
 namespace Controllers;
 
-class Index {
+class Index implements \Controllers\IController{
 
-    public function __construct() {
-        echo 'Index is constructed';
+    public function index($param) {
+        echo 'Default Index is constructed';
     }
 
 }

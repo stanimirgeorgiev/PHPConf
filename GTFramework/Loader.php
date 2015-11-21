@@ -31,12 +31,17 @@ final class Loader {
     }
 
     public static function loadClass($class) {
+        if ($class == 'Exception') {
+            throw new \Exception('Unhandled exeption has occured and has been passed to autoload.', 500);
+        }
+//        var_dump($class);
+//        echo '<pre>' . print_r($class, TRUE) . '~~~~~~~~~~~</pre><br />';
         $isFound = FALSE;
         foreach (self::$namespaces as $key => $value) {
             //echo $key . '<br>'.$value . '<br>'.$class . '<br><hr>';
             //echo '<pre>' . print_r(self::$namespaces, TRUE) . '</pre><hr>';
             if (strpos($class, $key) === 0) {
-                //echo str_replace('\\', DIRECTORY_SEPARATOR, $class).'<br>';
+//                echo str_replace('\\', DIRECTORY_SEPARATOR, $class).'<br>';
 //                echo substr_replace(str_replace('\\', DIRECTORY_SEPARATOR, $class), $value, 0, strlen($key)) . '.php <br>';
                 $file = realpath(substr_replace(str_replace('\\', DIRECTORY_SEPARATOR, $class), $value, 0, strlen($key)) . '.php');
 //                echo '| '.$file.' |' . '<hr><br><hr><br>';
@@ -45,11 +50,11 @@ final class Loader {
                     include $file;
                 } else {
                     //TODO
-                    echo $file . '<br>';
-                    throw new \Exception('File cannot be included ' . $file);
+//                    echo $file . 'Fila mai e prazen<br>'.$class;
+                    throw new \Exception('File cannot be included ' . $key . $value, 404);
                 }
-                $isFound = TRUE;
-                break;
+                    $isFound = TRUE;
+                    break;
             }
         }
         if (!$isFound) {

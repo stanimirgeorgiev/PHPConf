@@ -11,7 +11,7 @@
  *
  * @author ACER
  */
-namespace Controllers;
+namespace Controllers\Admin;
 class Kofa implements \Controllers\IController {
 
     public function index($params) {
