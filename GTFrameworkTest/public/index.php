@@ -4,6 +4,7 @@ $app = \GTFramework\App::getInstance();
 $app->setRouterByName('GetRouter');
 //phpinfo();
 $app->run();
+echo '<pre>' . print_r(\GTFramework\Loger::getInstance()->getLogs(), TRUE) . '</pre><br />';
 ?>
 <!DOCTYPE html>
 <html lang="en">

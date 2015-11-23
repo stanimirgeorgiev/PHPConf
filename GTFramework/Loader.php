@@ -17,9 +17,7 @@ namespace GTFramework;
 final class Loader {
 
     private static $namespaces = array();
-
     private function __construct() {
-        
     }
 
     public static function registerAutoLoad() {

@@ -23,9 +23,10 @@ class FrontController {
     private $bundle = null;
     private $routes = null;
     private $router = null;
+    private $loger;
 
     private function __construct() {
-        
+        $this->loger = \GTFramework\Loger::getInstance();
     }
 
     public function getRouter() {
@@ -37,7 +38,9 @@ class FrontController {
     }
 
     public function dispatch() {
+        $this->loger->chekBeforeLog('dispatch in FrontController started', 0);
         if ($this->router == NULL) {
+            $this->loger->chekBeforeLog('router is null', 0);
             throw new \Exception('Router is not set', 500);
         }
 //        $defaultRouter = \GTFramework\App::getInstance()->getConfig()->app;
@@ -117,7 +120,9 @@ class FrontController {
             $this->method = strtolower($_rc[$this->controller]['method'][$this->method]);
         }
 //      echo '<pre>' . print_r($_params, TRUE) . '<br>' . $this->controller . '<br>' . $this->method . '<br>' . '</pre>';
+        $this->loger->chekBeforeLog('Controller with name: '.ucfirst($this->controller).' caled from dispatch in FrontController', 0);
         $f = $this->ns . '\\' . ucfirst($this->controller);
+        $this->loger->chekBeforeLog('Method called with name: '.$this->method.' in Controller: '.$this->controller , 2);
         $newController = new $f();
         if (method_exists($newController, $this->method)) {
             $newController->{$this->method}($_params);
