@@ -25,9 +25,10 @@ class App {
      * @var \GTFramework\Config
      */
     private $_config = null;
-    private $router;
-    private $appConfig;
-    private $loger;
+    private $router = null;
+    private $appConfig = null;
+    private $loger = null;
+    private $connectionsDB = [];
 
     /**
      *
@@ -90,10 +91,10 @@ class App {
     public function run() {
         $this->loger->chekBeforeLog('run method in App started.', 0);
         $this->_frontController = \GTFramework\FrontController::getInstance();
-        
+
         $this->loger->chekBeforeLog('getInstance in App to FrontController called', 2);
         $this->appConfig = \GTFramework\App::getInstance()->getConfig()->app;
-        
+
         $this->loger->chekBeforeLog('getConfig method in App called with app param.', 2);
         if (isset($this->appConfig['default_router']) && $this->appConfig['default_router']) {
             if (!$this->router) {
@@ -109,6 +110,23 @@ class App {
         }
         $this->loger->chekBeforeLog('run in App called dispatch method in FrontController.', 1);
         $this->_frontController->dispatch();
+    }
+
+    public function getConnectionToDB($connection = 'default') {
+        if (!isset($this->connectionsDB)) {
+            throw new \Exception('No Database connection identifier found', 500);
+        }
+        if (isset($this->connectionsDB[$connection])) {
+            return $this->connectionsDB[$connection];
+        }
+        $_cfg = $this->getConfig()->db;
+        if (!isset($_cfg[$connection])) {
+            throw new \Exception('Provided identifier is invalid', 500);
+        }
+        $dbh = new \PDO($_cfg[$connection]['connection_uri'],$_cfg[$connection]['username'],$_cfg[$connection]['password'],
+                $_cfg[$connection]['pdo_options']);
+        $this->connectionsDB[$connection] = $dbh;
+        return $dbh;
     }
 
     function get_frontController() {

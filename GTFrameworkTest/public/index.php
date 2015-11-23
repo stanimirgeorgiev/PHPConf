@@ -1,10 +1,21 @@
 <?php
 include '../../GTFramework/App.php';
+$startTime = microtime(true);
+
 $app = \GTFramework\App::getInstance();
 $app->setRouterByName('GetRouter');
 //phpinfo();
 $app->run();
+$db = new GTFramework\DB\SimpleDB();
+$a = $db->prepare('USE gtframework SELECT * FROM users where id = 2')->execute()->fetchAllAssoc();
+echo '<pre>' . print_r($a, TRUE) . '</pre><br />';
+$a = $db->prepare('SELECT * FROM gtframework.users')->execute()->fetchAllAssoc();
+echo '<pre>' . print_r($a, TRUE) . '</pre><br />';
 echo '<pre>' . print_r(\GTFramework\Loger::getInstance()->getLogs(), TRUE) . '</pre><br />';
+
+$endTime = microtime(true);
+$elapsed = $endTime - $startTime;
+echo '<pre>' . print_r($elapsed, TRUE) . '</pre><br />';
 ?>
 <!DOCTYPE html>
 <html lang="en">
