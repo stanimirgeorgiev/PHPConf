@@ -54,6 +54,7 @@ class Loger {
             }
         }
         if ($this->loggingLevel >= $logLvl) {
+//            echo '<pre>' . print_r($log, TRUE) . '</pre><br />';
             array_push($this->_arrLogs, date('Y M d h:s:') . gettimeofday()['usec'] . ': ' . $log);
         }
     }

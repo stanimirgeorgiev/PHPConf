@@ -37,6 +37,7 @@ class SimpleDB {
 
             $this->logging = \GTFramework\Loger::getInstance();
         }
+        $this->logging->chekBeforeLog('__constructor in SimpleDB called with param: ' . print_r($connection),0);
     }
 
     /**

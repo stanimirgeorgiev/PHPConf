@@ -29,6 +29,7 @@ class App {
     private $appConfig = null;
     private $loger = null;
     private $connectionsDB = [];
+    private $_session = null;
 
     /**
      *
@@ -108,8 +109,38 @@ class App {
             $this->loger->chekBeforeLog('Created exeption in App because of missing default_router key in app config', 1);
             throw new \Exception('Default Router is not set', 500);
         }
+
+        $_sess = $this->appConfig['session'];
+        echo '<pre>' . print_r($_sess, TRUE) . '</pre><br />';
+        $this->loger->chekBeforeLog('run in App retrieved session configuration: ' . print_r($_sess), 0);
+        if ($_sess['autostart'] === true) {
+            if ($_sess['type'] === 'native') {
+                $_s = new \GTFramework\Sessions\NativeSession(
+                        $_sess['name'], $_sess['lifetime'], $_sess['path'], $_sess['domain'], $_sess['secure'], $_sess['HttpOnly']);
+            
+                $this->loger->chekBeforeLog('run in App created session: ' . print_r($_sess), 0);
+            } else if ($_sess['type'] === 'database' ) {
+                echo '<pre>' . print_r($_sess['type'], TRUE) . '</pre><br />';
+                $_s = new \GTFramework\Sessions\DBSession(
+                        $_sess['name'], $_sess['lifetime'], $_sess['path'], $_sess['domain'], $_sess['secure'], $_sess['HttpOnly']);
+            
+                $this->loger->chekBeforeLog('run in App created session: ' . print_r($_sess), 0);
+            } else {
+                throw new \Exception('Received invalid session: ' . $_sess['type'], 500);
+            }
+                $this->setSession($_s);
+        }
+
         $this->loger->chekBeforeLog('run in App called dispatch method in FrontController.', 1);
         $this->_frontController->dispatch();
+    }
+
+    public function setSession(\GTFramework\Sessions\ISession $session) {
+        $this->_session = $session;
+    }
+
+    public function getSession() {
+        return $this->_session;
     }
 
     public function getConnectionToDB($connection = 'default') {
@@ -123,8 +154,7 @@ class App {
         if (!isset($_cfg[$connection])) {
             throw new \Exception('Provided identifier is invalid', 500);
         }
-        $dbh = new \PDO($_cfg[$connection]['connection_uri'],$_cfg[$connection]['username'],$_cfg[$connection]['password'],
-                $_cfg[$connection]['pdo_options']);
+        $dbh = new \PDO($_cfg[$connection]['connection_uri'], $_cfg[$connection]['username'], $_cfg[$connection]['password'], $_cfg[$connection]['pdo_options']);
         $this->connectionsDB[$connection] = $dbh;
         return $dbh;
     }
