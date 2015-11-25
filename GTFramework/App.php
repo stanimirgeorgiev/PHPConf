@@ -27,7 +27,7 @@ class App {
     private $_config = null;
     private $router = null;
     private $appConfig = null;
-    private $loger = null;
+    private static $loger = null;
     private $connectionsDB = [];
     private $_session = null;
 
@@ -48,7 +48,7 @@ class App {
         if ($this->_config->_configFolder == NULL) {
             $this->_config->setConfigFolder('../config');
         }
-        $this->loger = \GTFramework\Loger::getInstance();
+        self::$loger = \GTFramework\Loger::getInstance();
     }
 
     /**
@@ -90,13 +90,14 @@ class App {
     }
 
     public function run() {
-        $this->loger->chekBeforeLog('run method in App started.', 0);
+
+        LOG < 0 ? : self::$loger->log('run method in App started.');
         $this->_frontController = \GTFramework\FrontController::getInstance();
 
-        $this->loger->chekBeforeLog('getInstance in App to FrontController called', 2);
+        LOG < 2 ? : self::$loger->log('getInstance in App to FrontController called');
         $this->appConfig = \GTFramework\App::getInstance()->getConfig()->app;
 
-        $this->loger->chekBeforeLog('getConfig method in App called with app param.', 2);
+        LOG < 2 ? : self::$loger->log('getConfig method in App called with app param.');
         if (isset($this->appConfig['default_router']) && $this->appConfig['default_router']) {
             if (!$this->router) {
                 $this->router = '\\GTFramework\\Routers\\' . $this->appConfig['default_router'];
@@ -104,34 +105,31 @@ class App {
                 $this->router = '\\GTFramework\\Routers\\' . $this->router;
             }
             $this->_frontController->setRouter(new $this->router);
-            $this->loger->chekBeforeLog('Router in App set to: ' . $this->router, 2);
+            LOG < 2 ? : self::$loger->log('Router in App set to: ' . $this->router);
         } else {
-            $this->loger->chekBeforeLog('Created exeption in App because of missing default_router key in app config', 1);
+            LOG < 1 ? : self::$loger->log('Created exeption in App because of missing default_router key in app config', 1);
             throw new \Exception('Default Router is not set', 500);
         }
 
         $_sess = $this->appConfig['session'];
-        echo '<pre>' . print_r($_sess, TRUE) . '</pre><br />';
-        $this->loger->chekBeforeLog('run in App retrieved session configuration: ' . print_r($_sess), 0);
+        LOG < 0 ? : self::$loger->log('run in App retrieved session configuration: ' . print_r($_sess, TRUE));
         if ($_sess['autostart'] === true) {
             if ($_sess['type'] === 'native') {
                 $_s = new \GTFramework\Sessions\NativeSession(
-                        $_sess['name'], $_sess['lifetime'], $_sess['path'], $_sess['domain'], $_sess['secure'], $_sess['HttpOnly']);
-            
-                $this->loger->chekBeforeLog('run in App created session: ' . print_r($_sess), 0);
-            } else if ($_sess['type'] === 'database' ) {
-                echo '<pre>' . print_r($_sess['type'], TRUE) . '</pre><br />';
+                        $_sess['name'], $_sess['lifetime'], $_sess['path'], $_sess['domain'], $_sess['secure'], $_sess['HttpOnly'], self::$loger);
+
+                LOG < 0 ? : $this->loger->log('run in App created session of type: ' . $_sess['type'] . ' with: ' . print_r($_sess, TRUE));
+            } else if ($_sess['type'] === 'database') {
                 $_s = new \GTFramework\Sessions\DBSession(
-                        $_sess['name'], $_sess['lifetime'], $_sess['path'], $_sess['domain'], $_sess['secure'], $_sess['HttpOnly']);
-            
-                $this->loger->chekBeforeLog('run in App created session: ' . print_r($_sess), 0);
+                        self::$loger, $_sess['dbName'], $_sess['dbConnection'], $_sess['dbTable'], $_sess['name'], $_sess['lifetime'], $_sess['path'], $_sess['domain'], $_sess['secure'], $_sess['HttpOnly']);
+                LOG < 0 ? : self::$loger->log('run in App created session of type ' . $_sess['type'] . ' with: ' . print_r($_sess, TRUE));
             } else {
-                throw new \Exception('Received invalid session: ' . $_sess['type'], 500);
+                throw new \Exception('Received invalid session type: ' . $_sess['type'], 500);
             }
-                $this->setSession($_s);
+            $this->setSession($_s);
         }
 
-        $this->loger->chekBeforeLog('run in App called dispatch method in FrontController.', 1);
+        LOG < 1 ? : self::$loger->log('run in App called dispatch method in FrontController');
         $this->_frontController->dispatch();
     }
 
@@ -160,23 +158,28 @@ class App {
     }
 
     function get_frontController() {
-        $this->loger->chekBeforeLog('get_frontController method in App called.', 1);
+        LOG < 1 ? : self::$loger->log('get_frontController method in App called.');
         return $this->_frontController;
     }
 
     function set_frontController(\GTFramework\FrontController $_frontController) {
-        $this->loger->chekBeforeLog('set_frontController method in App called with params: ' . $_frontController, 1);
+        LOG < 1 ? : self::$loger->log('set_frontController method in App called with params: ' . $_frontController);
         $this->_frontController = $_frontController;
     }
 
     public function getRouterByName() {
-        $this->loger->chekBeforeLog('getRouterByName in App method called ', 2);
+        LOG < 2 ? : self::$loger->log('getRouterByName in App method called ');
         return $this->router;
     }
 
     public function setRouterByName($router) {
-        $this->loger->chekBeforeLog('setRouterByName in App method called with params: ' . $router, 2);
+        self::$loger->setLogGlobal();
+        LOG < 2 ? : self::$loger->log('setRouterByName in App method called with params: ' . $router);
         $this->router = $router;
+    }
+
+    public static function getLoger() {
+        return self::$loger;
     }
 
     /**

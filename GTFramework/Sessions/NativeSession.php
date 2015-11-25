@@ -14,10 +14,18 @@ namespace GTFramework\Sessions;
  * @a thor ACER
  */
 class NativeSession implements \GTFramework\Sessions\ISession{
-    public function __construct($name = null, $lifetime = 3600,$path = null, $domain = null, $secure = false ,$httponly = TRUE ) {
+
+    /**
+     * @var \GTFramework\Loger
+     */
+    private $loger;
+
+    public function __construct($name = null, $lifetime = 3600,$path = null, $domain = null, $secure = false ,$httponly = TRUE , \GTFramework\Loger $loger) {
         if (strlen($name)<1) {
             $name = '_sess';
         }
+        $this->loger = $loger;
+        LOG < 2 ?: $this->loger->log('__construct in NativeSession created with params: name: '.$name.' lifetime: '. $lifetime.' path: '.$path.' domain: '.$domain.' secure: '.$secure.' httpOnly: '.$httponly);
         session_name($name);
         session_set_cookie_params($name, $lifetime, $domain, $secure, $httponly);
         session_start();

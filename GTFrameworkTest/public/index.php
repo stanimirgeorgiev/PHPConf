@@ -11,6 +11,7 @@ $app->getSession()->counter+=1;
 echo $app->getSession()->counter;
 $endTime = microtime(true);
 $elapsed = $endTime - $startTime;
+echo '<pre>' . print_r(\GTFramework\Loger::getInstance()->getLogs(), TRUE) . '</pre><br />';
 echo '<pre>' . print_r($elapsed, TRUE) . '</pre><br />';
 ?>
 <!DOCTYPE html>

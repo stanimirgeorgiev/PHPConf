@@ -13,7 +13,7 @@ $cfg['default_router'] = 'DefaultRouter';
  * Default logging level = 1;
  * Minimum logging level = 0;
  */
-$cfg['default_logging'] = 2;
+$cfg['default_logging'] = -1;
 
 /**
  * Session settings
@@ -26,7 +26,9 @@ $cfg['session']['path']= DIRECTORY_SEPARATOR;
 $cfg['session']['domain']= '';
 $cfg['session']['secure']= FALSE;
 $cfg['session']['HttpOnly']= true;
-$cfg['session']['dbConnection']= 'default';
+$cfg['session']['dbConnection']= 'session';
 $cfg['session']['dbTable']= 'sessions';
+$cfg['session']['dbName']= 'gtframework';
+
 
 return $cfg;

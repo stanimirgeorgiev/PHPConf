@@ -17,10 +17,9 @@ class Loger {
 
     private static $_instance;
     private $_arrLogs = [];
-    private  $loggingLevel = null;
+    private $loggingLevel = null;
 
-    private function __construct() {
-        
+    public function __construct() {
     }
 
     /**
@@ -42,21 +41,23 @@ class Loger {
     private function __wakeup() {
         
     }
-    
-    public function getLogs() {
-        return $this->_arrLogs;
-    }
 
-    public function chekBeforeLog($log, $logLvl) {
-        if ($this->loggingLevel == NULL) {
+    public function setLogGlobal() {
+        if ($this->loggingLevel === NULL) {
             if (isset(\GTFramework\App::getInstance()->getConfig()->app['default_logging'])) {
                 $this->loggingLevel = \GTFramework\App::getInstance()->getConfig()->app['default_logging'];
             }
         }
-        if ($this->loggingLevel >= $logLvl) {
+        define('LOG', $this->loggingLevel);
+    }
+
+    public function getLogs() {
+        return $this->_arrLogs;
+    }
+
+    public function log($log) {
 //            echo '<pre>' . print_r($log, TRUE) . '</pre><br />';
             array_push($this->_arrLogs, date('Y M d h:s:') . gettimeofday()['usec'] . ': ' . $log);
-        }
     }
 
     /**

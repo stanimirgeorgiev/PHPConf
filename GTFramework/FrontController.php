@@ -25,8 +25,8 @@ class FrontController {
     private $router = null;
     private $loger = null;
 
-    private function __construct() {
-        $this->loger = \GTFramework\Loger::getInstance();
+    private function __construct(\GTFramework\Loger $loger) {
+        $this->loger = $loger;
     }
 
     public function getRouter() {
@@ -38,9 +38,9 @@ class FrontController {
     }
 
     public function dispatch() {
-        $this->loger->chekBeforeLog('dispatch in FrontController started', 0);
+        LOG < 0 ?: $this->loger->log('dispatch in FrontController started');
         if ($this->router == NULL) {
-            $this->loger->chekBeforeLog('router is null', 0);
+            LOG < 0 ?: $this->loger->log('router is null');
             throw new \Exception('Router is not set', 500);
         }
 //        $defaultRouter = \GTFramework\App::getInstance()->getConfig()->app;
@@ -55,7 +55,7 @@ class FrontController {
 //        '<pre>'.var_dump($this->routes).'</pre>'.'<br />';
 //        var_dump($_uri).'<br />';
         if (is_array($this->routes) && count($this->routes) > 0) {
-            $this->loger->chekBeforeLog('dispatch in FrontController checking for bundle in app config', 2);
+            LOG < 2 ?: $this->loger->log('dispatch in FrontController checking for bundle in app config');
             foreach ($this->routes as $k => $v) {
 //                echo '<pre>' . print_r($_uri, TRUE) . '</pre><br />';
                 $checkIsBundle = explode('/', $_uri)[0];
@@ -84,7 +84,7 @@ class FrontController {
             throw new \Exception('Missing default routes confiuration', 500);
         }
         if ($this->ns == NULL && isset($this->routes['*']['namespace'])) {
-            $this->loger->chekBeforeLog('dispatch in FrontController checking for default namespace in app config', 2);
+            LOG < 2 ?: $this->loger->log('dispatch in FrontController checking for default namespace in app config');
             $this->ns = $this->routes['*']['namespace'];
             if (isset($this->routes['*']['controller'])) {
                 $_rc = $this->routes['*']['controller'];
@@ -122,9 +122,9 @@ class FrontController {
             $this->method = strtolower($_rc[$this->controller]['method'][$this->method]);
         }
 //      echo '<pre>' . print_r($_params, TRUE) . '<br>' . $this->controller . '<br>' . $this->method . '<br>' . '</pre>';
-        $this->loger->chekBeforeLog('Controller with name: ' . ucfirst($this->controller) . ' caled from dispatch in FrontController', 0);
+        LOG < 0 ?: $this->loger->log('Controller with name: ' . ucfirst($this->controller) . ' caled from dispatch in FrontController');
         $f = $this->ns . '\\' . ucfirst($this->controller);
-        $this->loger->chekBeforeLog('Method called with name: ' . $this->method . ' in Controller: ' . $this->controller . ' caled from dispatch in FrontController', 2);
+        LOG < 2 ?: $this->loger->log('Method called with name: ' . $this->method . ' in Controller: ' . $this->controller . ' caled from dispatch in FrontController');
         $newController = new $f();
         if (method_exists($newController, $this->method)) {
             $newController->{$this->method}($_params);
@@ -134,7 +134,7 @@ class FrontController {
     }
 
     public function getDefaultControler() {
-        $this->loger->chekBeforeLog('getDefaultControler in FrontController started', 2);
+        LOG < 2 ?: $this->loger->log('getDefaultControler in FrontController started');
         if ($this->bundle != NULL && $this->bundle != '*') {
             if (isset($this->routes[$this->bundle])) {
                 if (isset($this->routes[$this->bundle]['default_controller'])) {
@@ -160,7 +160,7 @@ class FrontController {
     }
 
     public function getDefaultMethod() {
-        $this->loger->chekBeforeLog('getDefaultMethod in FrontController started', 2);
+        LOG < 2 ?: $this->loger->log('getDefaultMethod in FrontController started');
         if ($this->bundle != NULL && $this->bundle != '*') {
             if (isset($this->routes[$this->bundle])) {
                 if (isset($this->routes[$this->bundle]['default_method'])) {
@@ -191,7 +191,7 @@ class FrontController {
      */
     public static function getInstance() {
         if (self::$_instance == null) {
-            self::$_instance = new \GTFramework\FrontController();
+            self::$_instance = new \GTFramework\FrontController(\GTFramework\App::getLoger());
         }
         return self::$_instance;
     }

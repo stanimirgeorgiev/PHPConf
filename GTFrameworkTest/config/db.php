@@ -11,7 +11,7 @@ $cfg['default']['password'] = 'SoftUniConf2015';
 $cfg['default']['pdo_options'][PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES 'UTF8'";
 $cfg['default']['pdo_options'][PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 
-$cfg['session']['connection_uri'] = 'mysql:host=localhost;dbname = session';
+$cfg['session']['connection_uri'] = 'mysql:host=localhost;dbname = gtframework';
 $cfg['session']['username'] = 'Buberun';
 $cfg['session']['password'] = 'SoftUniConf2015';
 $cfg['session']['pdo_options'][PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES 'UTF8'";
