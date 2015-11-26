@@ -1,0 +1,1 @@
+<h1>It's working in admin</h1>

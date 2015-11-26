@@ -19,13 +19,15 @@ class NativeSession implements \GTFramework\Sessions\ISession{
      * @var \GTFramework\Loger
      */
     private $loger;
-
+    
     public function __construct($name = null, $lifetime = 3600,$path = null, $domain = null, $secure = false ,$httponly = TRUE , \GTFramework\Loger $loger) {
         if (strlen($name)<1) {
             $name = '_sess';
         }
+        
         $this->loger = $loger;
         LOG < 2 ?: $this->loger->log('__construct in NativeSession created with params: name: '.$name.' lifetime: '. $lifetime.' path: '.$path.' domain: '.$domain.' secure: '.$secure.' httpOnly: '.$httponly);
+        echo '<pre>' . print_r($lifetime, TRUE) . '</pre><br />';
         session_name($name);
         session_set_cookie_params($name, $lifetime, $domain, $secure, $httponly);
         session_start();
