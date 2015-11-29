@@ -38,7 +38,8 @@ class FrontController {
     }
 
     public function dispatch() {
-        LOG < 0 ?: $this->loger->log('dispatch in FrontController started');
+        $_uri = $this->router->getURI();
+        LOG < 0 ?: $this->loger->log('dispatch in FrontController started with route params: '.$_uri);
         if ($this->router == NULL) {
             LOG < 0 ?: $this->loger->log('router is null');
             throw new \Exception('Router is not set', 500);
@@ -48,7 +49,6 @@ class FrontController {
 //        $routerPath = '\\GTFramework\\Routers\\'.$defaultRouter['default_router'];
 //        $dr = new $routerPath();
 //        echo '<pre>' . print_r($this->router, TRUE) . '</pre>'.'<br />';
-        $_uri = $this->router->getURI();
         $_rc = null;
         $this->routes = \GTFramework\App::getInstance()->getConfig()->routes;
 //                echo $_uri.'||||||<br />';

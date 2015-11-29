@@ -14,6 +14,11 @@ namespace GTFramework;
  * @author ACER
  */
 class Validation {
-
     
+//    @<HTTPPOST('index/proba')>
+
+    public function __construct() {
+        
+    }
+
 }
