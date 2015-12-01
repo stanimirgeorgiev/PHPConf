@@ -2,6 +2,8 @@
 $cfg['namespaces'] = [
     'Controllers' => '../controllers',
     'Helpers' => '../helpers',
+    'Views' => '../views',
+    'Models' => '../models',
 ];
 
 $cfg['default_controller'] = 'Index';

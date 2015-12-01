@@ -19,7 +19,6 @@ class View {
     private $___viewPath = null;
     private $___data = [];
     private $___viewDir = null;
-    private $___extension = '.php';
     private $___layoutParts = [];
     private $___layoutData = [];
     private $___loger = null;
@@ -85,7 +84,7 @@ class View {
             $this->setViewFolder($this->___viewPath);
         }
 
-        $___fl = $this->___viewDir . str_replace('/', DIRECTORY_SEPARATOR, $file) . $this->___extension;
+        $___fl = $this->___viewDir . str_replace('/', DIRECTORY_SEPARATOR, $file);
 
         if (!file_exists($___fl) && !is_readable($___fl)) {
             throw new \Exception('View file ' . $___fl . ' cannot be included', 500);
@@ -99,14 +98,13 @@ class View {
     public function helper($helperClass, $helperMethod) {
 
         if (!trim($helperClass) && !trim($helperMethod)) {
-            throw new \Exception('Helpers require valid class name and method name', 500);
+            throw new \Exception('Helpers require valid class full name and method name', 500);
         }
 
-        if (!class_exists('\Helpers\\' . $helperClass)) {
-            throw new \Exception('Class with name: ' . $helperClass . ' doesn\'t exist in namespace \\Helpers', 500);
+        if (!class_exists($helperClass)) {
+            echo '<pre>' . print_r($helperClass, TRUE) . '</pre><br />';
+            throw new \Exception('Class with name: ' . $helperClass . ' doesn\'t exist in namespace', 500);
         }
-
-        $helperClass = '\Helpers\\' . $helperClass;
 
         $helperObject = new $helperClass;
 
@@ -114,7 +112,27 @@ class View {
             throw new \Exception('Method with name: ' . $helperMethod . ' do not exist in class: ' . print_r($helperObject, TRUE), 500);
         }
 
-        $helperObject->$helperMethod();
+        return $helperObject->$helperMethod();
+    }
+    
+
+    public function addView($viewClass, $viewMethod) {
+
+        if (!trim($viewClass) && !trim($viewMethod)) {
+            throw new \Exception('Views require valid class name and method name', 500);
+        }
+
+        if (!class_exists($viewClass)) {
+            throw new \Exception('Class with name: ' . $viewClass . ' doesn\'t exist in namespace', 500);
+        }
+
+        $viewObject = new $viewClass;
+
+        if (!method_exists($viewObject, $viewMethod)) {
+            throw new \Exception('Method with name: ' . $viewMethod . ' do not exist in class: ' . print_r($viewObject, TRUE), 500);
+        }
+
+        $viewObject->$viewMethod();
     }
     
     public function __set($name, $value) {
@@ -141,7 +159,7 @@ class View {
 
         $this->___viewDir = $path;
     }
-
+        
     /**
      * @var $cnd
      * @return \GTFrameworkTest\config\cdn
