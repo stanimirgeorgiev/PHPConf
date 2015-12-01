@@ -1,6 +1,7 @@
 <?php
 $cfg['namespaces'] = [
-    'Controllers' => '../controllers'
+    'Controllers' => '../controllers',
+    'Helpers' => '../helpers',
 ];
 
 $cfg['default_controller'] = 'Index';

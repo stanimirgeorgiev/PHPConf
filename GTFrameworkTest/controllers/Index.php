@@ -24,9 +24,10 @@ class Index implements \Controllers\IController{
         $_SESSION['token'] = $token;
         $view = \GTFramework\View::getInstance();
         $view->username = 'Stanaka';
+        $view->title = 'Home';
         $view->appendToLayout('body2', 'admin/index');
         $view->appendToLayout('body1','index');
-        $view->display('layouts/default', ['as'=>[1,2,3,4,$token]]);
+        $view->display('layouts/default', ['token'=>[$token]]);
     }
 
 }

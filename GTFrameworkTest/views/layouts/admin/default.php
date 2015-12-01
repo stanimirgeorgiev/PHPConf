@@ -5,7 +5,7 @@
         <title>Form data</title>
     </head>
     <body>
-        <?= $this->getLayoutData('body1'); ?>
-        <?= $this->getLayoutData('body2'); ?>
+<?= $this->getLayoutData('body1'); ?>
+<?= $this->getLayoutData('body2'); ?>
     </body>
 </html>

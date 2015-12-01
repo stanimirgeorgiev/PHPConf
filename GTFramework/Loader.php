@@ -37,8 +37,8 @@ final class Loader {
 //        echo '<pre>' . print_r($class, TRUE) . '~~~~~~~~~~~</pre><br />';
         $isFound = FALSE;
         foreach (self::$namespaces as $key => $value) {
-            //echo $key . '<br>'.$value . '<br>'.$class . '<br><hr>';
-            //echo '<pre>' . print_r(self::$namespaces, TRUE) . '</pre><hr>';
+//            echo $key . '<br>'.$value . '<br>'.$class . '<br><hr>';
+//            echo '<pre>' . print_r(self::$namespaces, TRUE) . '</pre><hr>';
             if (strpos($class, $key) === 0) {
 //                echo str_replace('\\', DIRECTORY_SEPARATOR, $class).'<br>';
 //                echo substr_replace(str_replace('\\', DIRECTORY_SEPARATOR, $class), $value, 0, strlen($key)) . '.php <br>';

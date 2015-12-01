@@ -1,0 +1,8 @@
+   # Removes index.php from ExpressionEngine URLs
+   RewriteEngine On
+   #RewriteCond .*index\.php/(.*)$
+   #RewriteRule "^/index\.php$" "/" [R]
+   RedirectMatch "^/index\.php/(.*)" "/$1"
+
+   RewriteCont %{REQUEST_URI} 
+

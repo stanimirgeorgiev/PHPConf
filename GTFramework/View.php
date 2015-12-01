@@ -23,32 +23,42 @@ class View {
     private $___layoutParts = [];
     private $___layoutData = [];
     private $___loger = null;
+    private $___cdn = null;
+    private $___method = null;
 
     private function __construct(\GTFramework\Loger $loger) {
+
         $this->___viewPath = \GTFramework\App::getInstance()->getConfig()->app['viewPath'];
+
         if ($this->___viewPath === NULL) {
             $this->___viewPath = realpath('../views/');
         }
+
         $this->___loger = $loger;
+
         LOG < 2 ? : $this->___loger->log('__construct in View called with params: ' . $this->___viewPath);
     }
 
     public function display($name, $data = [], $returnAsString = FALSE) {
+
         LOG < 2 ? : $this->___loger->log('dispaly in View called with params: ' . $name . ', ' . print_r($data, true) . ', ' . $returnAsString);
-        
+
         if (is_array($data)) {
             $this->___data = array_merge($this->___data, $data);
         }
-        
+
         if (count($this->___layoutParts) > 0) {
+
             foreach ($this->___layoutParts as $k => $v) {
+
                 $r = $this->_includeFile($v);
+
                 if ($r) {
                     $this->___layoutData[$k] = $r;
                 }
             }
         }
-        
+
         if ($returnAsString) {
             return $this->_includeFile($name);
         } else {
@@ -61,27 +71,52 @@ class View {
     }
 
     public function appendToLayout($key, $template) {
-        if ($key && $template) {
-            $this->___layoutParts[$key] = $template;
-        } else {
+
+        if (!$key && !$template) {
             throw new \Exception('Layout require valid key and template', 500);
         }
+    
+        $this->___layoutParts[$key] = $template;
     }
 
     public function _includeFile($file) {
+        
         if ($this->___viewDir === NULL) {
             $this->setViewFolder($this->___viewPath);
         }
+
         $___fl = $this->___viewDir . str_replace('/', DIRECTORY_SEPARATOR, $file) . $this->___extension;
-        if (file_exists($___fl) && is_readable($___fl)) {
-            ob_start();
-            include $___fl;
-            return ob_get_clean();
-        } else {
+
+        if (!file_exists($___fl) && !is_readable($___fl)) {
             throw new \Exception('View file ' . $___fl . ' cannot be included', 500);
         }
+
+        ob_start();
+        include $___fl;
+        return ob_get_clean();
     }
 
+    public function helper($helperClass, $helperMethod) {
+
+        if (!trim($helperClass) && !trim($helperMethod)) {
+            throw new \Exception('Helpers require valid class name and method name', 500);
+        }
+
+        if (!class_exists('\Helpers\\' . $helperClass)) {
+            throw new \Exception('Class with name: ' . $helperClass . ' doesn\'t exist in namespace \\Helpers', 500);
+        }
+
+        $helperClass = '\Helpers\\' . $helperClass;
+
+        $helperObject = new $helperClass;
+
+        if (!method_exists($helperObject, $helperMethod)) {
+            throw new \Exception('Method with name: ' . $helperMethod . ' do not exist in class: ' . print_r($helperObject, TRUE), 500);
+        }
+
+        $helperObject->$helperMethod();
+    }
+    
     public function __set($name, $value) {
         $this->___data[$name] = $value;
     }
@@ -91,17 +126,36 @@ class View {
     }
 
     public function setViewFolder($path) {
+
         $path = trim($path);
-        if ($path) {
-            $path = realpath($path) . DIRECTORY_SEPARATOR;
-            if (is_readable($path) && is_dir($path)) {
-                $this->___viewDir = $path;
-            } else {
-                throw new \Exception('Invalid view path: ' . $path, 404);
-            }
-        } else {
+
+        if (!$path) {
             throw new \Exception('Invalid view path: ' . $path, 404);
         }
+
+        $path = realpath($path) . DIRECTORY_SEPARATOR;
+
+        if (!is_readable($path) && !is_dir($path)) {
+            throw new \Exception('Invalid view path: ' . $path, 404);
+        }
+
+        $this->___viewDir = $path;
+    }
+
+    /**
+     * @var $cnd
+     * @return \GTFrameworkTest\config\cdn
+     * @throws \Exception
+     */
+    public function getCDN() {
+
+        $this->___cdn = \GTFramework\App::getInstance()->getConfig()->cdn;
+
+        if (!is_array($this->___cdn) && !count($this->___cdn['cdn']) < 4) {
+            throw new \Exception('Problem to read CDN config file', 500);
+        }
+
+        return $this->___cdn;
     }
 
     /**
@@ -109,9 +163,11 @@ class View {
      * @return \GTFramework\View
      */
     public static function getInstance() {
+        
         if (self::$_instance == NULL) {
             self::$_instance = new \GTFramework\View(\GTFramework\App::getLoger());
         }
+        
         return self::$_instance;
     }
 

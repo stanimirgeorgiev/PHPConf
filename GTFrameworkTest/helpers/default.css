@@ -1,15 +1,10 @@
 body {
   color: #888;
   font-family: Helvetica, sans-serif;
-  text-align: center; 
-    vertical-align: central;
-}
+  text-align: center; }
 
 #wrapper {
   width: 960px;
   background-color: #F0F0E8;
   margin: 0 auto;
   padding: 30px; }
-#line {
-    color: #000000;
-}
