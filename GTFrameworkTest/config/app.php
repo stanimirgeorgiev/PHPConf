@@ -1,9 +1,16 @@
 <?php
+/**
+ * @var array
+ */
 $cfg['namespaces'] = [
     'Controllers' => '../controllers',
     'Helpers' => '../helpers',
     'Views' => '../views',
     'Models' => '../models',
+];
+
+$cfg['host'] = [
+  'domain' => 'localhost',  
 ];
 
 $cfg['default_controller'] = 'Index';

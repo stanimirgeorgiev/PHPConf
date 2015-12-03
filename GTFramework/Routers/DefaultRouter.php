@@ -19,9 +19,16 @@ class DefaultRouter implements \GTFramework\Routers\IRouter {
     public function getURI() {
 //        echo '<pre>' . print_r('Tova e DefaultRouter', TRUE) . '</pre><br />';
 //        echo '<pre>' . print_r($_SERVER, TRUE) . '</pre><br />';
+//        echo '<pre>' . print_r($_SERVER['REQUEST_METHOD'], TRUE) . '</pre><br />';
+//        echo '<pre>' . print_r(, TRUE) . '</pre><br />';
 //        echo '<pre>' . print_r($_SERVER['PHP_SELF'], TRUE) . '</pre><br />';     
 //        echo '<pre>' . print_r($_SERVER['SCRIPT_NAME'], TRUE) . '</pre><br />';
         return substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME']) + 1);
+    }
+
+    public function getPost() {
+        \GTFramework\InputData::getInstance()->setPost([]);
+        return;
     }
 
 }

@@ -6,16 +6,16 @@
  * and open the template in the editor.
  */
 
+namespace Helpers;
+
 /**
+ * Description of Link
  *
  * @author ACER
  */
+class Link {
 
-namespace GTFramework\Routers;
-
-interface IRouter {
-
-    public function getURI();
-
-    public function getPost();
+    public function getPages() {
+        
+    }
 }

@@ -13,6 +13,7 @@ namespace Controllers;
  *
  * @author ACER
  */
-class Authorization {
-    //put your code here
+class Account {
+
+    
 }

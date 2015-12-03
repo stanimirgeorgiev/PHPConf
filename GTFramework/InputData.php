@@ -28,31 +28,31 @@ class InputData {
     }
 
     public function setGet($arr) {
-        LOG < 2 ?: $this->loger->log('setGet in InputData called', 2);
+        LOG < 2 ?: $this->loger->log('setGet in InputData called with params: '. print_r($arr,TRUE), 2);
         if (is_array($arr)) {
             $this->_get = $arr;
         }
     }
 
     public function setPost($arr) {
-        LOG < 2 ?: $this->loger->log('setPost in InputData called', 2);
+        LOG < 2 ?: $this->loger->log('setPost in InputData called with params: '. print_r($arr,TRUE), 2);
         if (is_array($arr)) {
             $this->_post = $arr;
         }
     }
 
     public function hasGet($id) {
-        LOG < 2 ?: $this->loger->log('hasGet in InputData called', 2);
+        LOG < 2 ?: $this->loger->log('hasGet in InputData called with params: '. print_r($id,TRUE), 2);
         return array_key_exists($id, $this->_get);
     }
 
     public function hasPost($name) {
-        LOG < 2 ?: $this->loger->log('hasPost in InputData called', 2);
+        LOG < 2 ?: $this->loger->log('hasPost in InputData called with params: '. print_r($name,TRUE), 2);
         return array_key_exists($name, $this->_post);
     }
 
     public function hasCookies($name) {
-        LOG < 2 ?: $this->loger->log('hasCookies in InputData called', 2);
+        LOG < 2 ?: $this->loger->log('hasCookies in InputData called with params: '. print_r($name,TRUE), 2);
         return array_key_exists($name, $this->_cookie);
     }
 

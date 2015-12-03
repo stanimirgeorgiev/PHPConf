@@ -37,7 +37,7 @@ class FrontController {
         $this->router = $router;
     }
 
-    public function dispatch() {
+    public function processReguest() {
         $_uri = $this->router->getURI();
         LOG < 0 ?: $this->loger->log('dispatch in FrontController started with route params: '.$_uri);
         if ($this->router == NULL) {
@@ -122,10 +122,18 @@ class FrontController {
             $this->method = strtolower($_rc[$this->controller]['method'][$this->method]);
         }
 //      echo '<pre>' . print_r($_params, TRUE) . '<br>' . $this->controller . '<br>' . $this->method . '<br>' . '</pre>';
+        
+//        \GTFramework\Loader::setCheck(TRUE);
+        
         LOG < 0 ?: $this->loger->log('Controller with name: ' . ucfirst($this->controller) . ' caled from dispatch in FrontController');
+        
         $f = $this->ns . '\\' . ucfirst($this->controller);
+        echo '<pre>' . print_r($f, TRUE) . '</pre><br />';
+        
         LOG < 2 ?: $this->loger->log('Method called with name: ' . $this->method . ' in Controller: ' . $this->controller . ' caled from dispatch in FrontController');
+        
         $newController = new $f();
+        
         if (method_exists($newController, $this->method)) {
             $newController->{$this->method}($_params);
         } else {

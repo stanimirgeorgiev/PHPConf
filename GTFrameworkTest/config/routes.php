@@ -17,29 +17,20 @@
  * method from controller with name 'some_controller_name'
  * 
  */
-$defaultBundle = 'administration';
-$newBundle = 'Admin';
-$newIndex = 'noviqMiIndeks';
+$defaultBundle = 'admin';
+
 /**
  * $cfg['*']['namespace'] default configuration for the namespace
  */
 
 $cfg['*']['namespace'] = 'Controllers';
 $cfg['*']['controller']['mama']['to'] = 'kofa';
+$cfg['*']['controller']['register']['to'] = 'autho';
 $cfg['*']['controller']['kofa']['method']['koko'] = 'roro';
-
-$cfg[$newBundle]['namespace'] = 'Controllers\Admin';
-$cfg[$newBundle]['default_controller'] = 'index';
-$cfg[$newBundle]['default_method'] = 'index';
-$cfg[$newBundle]['controller']['start']['to'] = 'index';
-$cfg[$newBundle]['controller']['index']['method']['new'] = 'index';
 
 $cfg[$defaultBundle]['namespace'] = 'Controllers\Admin';
 $cfg[$defaultBundle]['default_controller'] = 'index';
 $cfg[$defaultBundle]['default_method'] = 'index';
 $cfg[$defaultBundle]['controller']['new']['to'] = 'create';
-$cfg[$defaultBundle]['controller']['ind']['to'] = $newIndex;
-$cfg[$defaultBundle]['controller'][$newIndex]['method']['new'] = '_newMethod';
-$cfg[$defaultBundle]['controller'][$newIndex]['method']['proba'] = 'raboti';
 
 return $cfg;

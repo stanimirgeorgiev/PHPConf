@@ -26,7 +26,7 @@ class App {
      */
     private $_config = null;
     private $router = null;
-    private $appConfig = null;
+    private static $appConfig = null;
     private static $loger = null;
     private $connectionsDB = [];
     private $_session = null;
@@ -116,16 +116,30 @@ class App {
 
         $_sess = $this->appConfig['session'];
         LOG < 0 ? : self::$loger->log('run in App retrieved session configuration: ' . print_r($_sess, TRUE));
-        
+
         if ($_sess['autostart'] === true) {
             if ($_sess['type'] === 'native') {
                 $_s = new \GTFramework\Sessions\NativeSession(
-                        $_sess['name'], $_sess['lifetime'], $_sess['path'], $_sess['domain'], $_sess['secure'], $_sess['HttpOnly'], self::$loger);
+                        $_sess['name'],
+                        $_sess['lifetime'],
+                        $_sess['path'],
+                        $_sess['domain'],
+                        $_sess['secure'],
+                        $_sess['HttpOnly']);
 
                 LOG < 0 ? : self::$loger->log('run in App created session of type: ' . $_sess['type'] . ' with: ' . print_r($_sess, TRUE));
             } else if ($_sess['type'] === 'database') {
                 $_s = new \GTFramework\Sessions\DBSession(
-                        self::$loger, $_sess['dbName'], $_sess['dbConnection'], $_sess['dbTable'], $_sess['name'], $_sess['lifetime'], $_sess['path'], $_sess['domain'], $_sess['secure'], $_sess['HttpOnly']);
+                        $_sess['dbName'],
+                        $_sess['dbConnection'],
+                        $_sess['dbTable'],
+                        $_sess['name'],
+                        $_sess['lifetime'],
+                        $_sess['path'],
+                        $_sess['domain'],
+                        $_sess['secure'],
+                        $_sess['HttpOnly']
+                       );
 
                 LOG < 0 ? : self::$loger->log('run in App created session of type ' . $_sess['type'] . ' with: ' . print_r($_sess, TRUE));
             } else {
@@ -138,7 +152,7 @@ class App {
 
         LOG < 1 ? : self::$loger->log('run in App called dispatch method in FrontController');
 
-        $this->_frontController->dispatch();
+        $this->_frontController->processReguest();
     }
 
     public function setSession(\GTFramework\Sessions\ISession $session) {
@@ -206,9 +220,13 @@ class App {
         if (self::$_instance == NULL) {
             self::$_instance = new \GTFramework\App();
         }
+
         return self::$_instance;
     }
 
+    public function getAppConfig() {
+        return selF::$appConfig;
+    }
     public function __destruct() {
         LOG < 2 ? : self::$loger->log('__destructor in App called');
         if ($this->_session != NULL) {

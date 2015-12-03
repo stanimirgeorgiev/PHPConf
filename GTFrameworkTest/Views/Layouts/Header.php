@@ -5,13 +5,12 @@ namespace Views\Layouts;
 class Header {
 
     public function addNavBar() {
-        echo '<ul class = "btn-group" role = "group" aria-label = "...">'.PHP_EOL.
-            '  <li class = "btn btn-default"><a href="" >Home</a></li>'.PHP_EOL.
-            '  <li class = "btn btn-default"><a href="">About</a></li>'.PHP_EOL.
-            '  <li class = "btn btn-default"><a href="">About</a></li>'.PHP_EOL.
-            '  <li class = "btn btn-default"><a href="">FAQ\'S</a></li>'.PHP_EOL.
-            '  <li class="btn btn-default"><a href="">Login</a></li>'.PHP_EOL;
-            '</ul>'.PHP_EOL;
+        echo    '<ul class = "btn-group" role = "group" aria-label = "...">
+                    <li class = "btn btn-default"><a href="'. \GTFramework\View::getInstance()->helper('\Helpers\Link', 'getPages').'" >Home</a></li>
+                    <li class = "btn btn-default"><a href="">About</a></li>
+                    <li class = "btn btn-default"><a href="">FAQ\'S</a></li>
+                    <li class="btn btn-default"><a href="">Login</a></li>
+                </ul>'.PHP_EOL;
     }
 
 }

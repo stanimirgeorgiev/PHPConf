@@ -22,7 +22,7 @@ class SimpleDB {
     private $stmt = null;
     private $logSql = null;
     private $params = [];
-    private $loger = null;
+    protected $loger = null;
 
     public function __construct($connection = NULL) {
         if ($connection instanceof \PDO) {
@@ -35,7 +35,7 @@ class SimpleDB {
         }
         if (!$this->loger) {
             $this->loger = \GTFramework\App::getLoger();
-        }
+            }
         LOG < 0 ?: $this->loger->log('__constructor in SimpleDB called with param: ' . print_r($connection,TRUE));
     }
 

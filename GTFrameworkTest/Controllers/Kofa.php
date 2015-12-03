@@ -16,7 +16,7 @@ namespace Controllers;
 
 /**
  * 
- * *Authorized[]* *
+ * *Required[]* *
  */
 class Kofa implements \Controllers\IController {
 
@@ -24,6 +24,29 @@ class Kofa implements \Controllers\IController {
     private $methods = null;
     private $method = null;
     private $class = null;
+    private $annotations = array(
+        'alpha' => 0,
+        'alphanum' => 0,
+        'alphanumdash' => 0,
+        'authorized' => 0,
+        'different' => 0,
+        'differentStrict' => 0,
+        'email' => 0,
+        'emails' => 0,
+        'exactlength' => 0,
+        'gt' => 0,
+        'ip' => 0,
+        'lt' => 0,
+        'matches' => 0,
+        'matchesStrict' => 0,
+        'maxlength' => 0,
+        'minlength' => 0,
+        'numeric' => 0,
+        'regexp' => 0,
+        'required' => 0,
+        'unauthorized' => 0,
+        'url' => 0,
+    );
 
     public function __construct() {
         $this->class = 'Controllers\Kofa';
@@ -35,39 +58,54 @@ class Kofa implements \Controllers\IController {
      * 
      * *Authorized[Admin]* *
      * *Unauthorized[]* *
+     * *Unauthorized[]* *
+     * *Unauthorized[]* *
+     * *Unauthorized[]* *
      * 
      * @param type $params
      * @return void proba
      * 
      */
     public function index($params) {
-        $anno = $this->gerAnnotation($this->class, $this->method);
+        $anno = $this->getAnnotation($this->method);
+        echo '<pre>' . print_r($anno, TRUE) . '</pre><br />';
         if (empty($anno)) {
+            echo '<pre>' . print_r('No annotations , 200', TRUE) . '</pre><br />';
             return ['No annotations', 200];
         }
+        $annotArray = [];
         foreach ($anno as $a) {
             $a = explode('[', trim($a));
-            $arg = rtrim(array_pop($a),']');
+            $arg = rtrim(array_pop($a), ']');
 //            $this->
-            $a = $a[0];
-            $this->verify($a, $arg);
-            echo '<pre>' . print_r($arg, TRUE) . '</pre><br />';
-            echo '<pre>' . print_r($a, TRUE) . '</pre><br />';
+            $annotArray[$a[0]] = $arg;
+
+//            $this->verify($a, $arg);
         }
-//        switch ($a);
-        echo '<pre>' . print_r($anno, TRUE) . '</pre><br />';
+//        echo '<pre>' . print_r($annotArray, TRUE) . ' annotation </pre><br />';
+        foreach ($annotArray as $k => $v) {
+            if (isset($this->annotations[$k])) {
+                
+            }
+        }
+        $model = new \Models\AdministrationModel();
+        $model->getRoleByName('Administrator');
+              
+//                  switch ($a);
+//        echo '<pre>' . print_r($anno, TRUE) . '</pre><br />';
     }
 
-    public function gerAnnotation($class, $method) {
-        $doc = $this->ref->getMethod($method)->getDocComment();
-        if (!$doc) {
+    public function getAnnotation($method) {
+        $docMethod = $this->ref->getMethod($method)->getDocComment();
+        echo '<pre>' . print_r($this->ref->getDocComment(), TRUE) . '</pre><br />';
+        if (!$docMethod) {
             return [];
         }
-        $doc = explode('* *', $doc);
-        array_pop($doc);
-        array_shift($doc);
-        $doc = array_filter($doc, 'trim');
-        return $doc;
+        $docMethod = explode('* *', $docMethod);
+        array_pop($docMethod);
+        array_shift($docMethod);
+        $docMethod = array_filter($docMethod, 'trim');
+        return $docMethod;
     }
 
     /**
@@ -82,15 +120,15 @@ class Kofa implements \Controllers\IController {
             case 'Authorized':
                 echo '<pre>' . print_r('Method ?????? is authorized', TRUE) . '</pre><br />';
                 break;
-            
+
             case 'Unauthorized':
                 echo '<pre>' . print_r('Method ?????? is unauthorized', TRUE) . '</pre><br />';
                 break;
-            
+
             case 'Required':
                 echo '<pre>' . print_r('Method ?????? is required', TRUE) . '</pre><br />';
                 break;
-            
+
             default:
                 break;
         }
