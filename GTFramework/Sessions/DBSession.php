@@ -37,7 +37,7 @@ class DBSession extends \GTFramework\DB\SimpleDB implements \GTFramework\Session
         $this->domain = $domain;
         $this->secure = $secure;
         $this->httpOnly = $httpOnly;
-        LOG < 0 ? : $this->loger->log('__construct in DBSession called with params: ' . 'dbName: ' . $dbName . ', dbConnection = ' . $dbConnection . ', tableName = ' . $tableName . ', sessionName = ' . $sessionName . ', lifetime = ' . $lifetime . ', path = ' . $path . ', domain = ' . $domain . ', secure = ' . $secure . ', httpOnly = ' . $httpOnly);
+        LOG < 0 ? : $this->logger->log('__construct in DBSession called with params: ' . 'dbName: ' . $dbName . ', dbConnection = ' . $dbConnection . ', tableName = ' . $tableName . ', sessionName = ' . $sessionName . ', lifetime = ' . $lifetime . ', path = ' . $path . ', domain = ' . $domain . ', secure = ' . $secure . ', httpOnly = ' . $httpOnly);
         if (rand(0, 100) === 50) {
 //            echo '<pre>' . print_r('------------------CLEAR-----CLEAR----CLEAR-------------', TRUE) . '</pre><br />';
             $this->dbClearOldSessions();
@@ -48,22 +48,22 @@ class DBSession extends \GTFramework\DB\SimpleDB implements \GTFramework\Session
         }
 
         if (strlen($this->sessionId) < 32) {
-            LOG < 2 ? : $this->loger->log('__construct in DBSession check strlen of sessionId < 32 : ( ' . strlen($this->sessionId) . ' )');
+            LOG < 2 ? : $this->logger->log('__construct in DBSession check strlen of sessionId < 32 : ( ' . strlen($this->sessionId) . ' )');
 
             $this->startNewSession();
         } else if (!$this->validateSession()) {
-            LOG < 2 ? : $this->loger->log('__construct in DBSession validate session');
+            LOG < 2 ? : $this->logger->log('__construct in DBSession validate session');
 
             $this->startNewSession();
         }
     }
 
     public function startNewSession() {
-        LOG < 2 ? : $this->loger->log('startNewSession in DBSession called');
+        LOG < 2 ? : $this->logger->log('startNewSession in DBSession called');
 
         $this->sessionId = md5(uniqid('GTFramework', TRUE));
 
-        LOG < 2 ? : $this->loger->log('startNewSession in DBSession created session with Id: ' . $this->sessionId);
+        LOG < 2 ? : $this->logger->log('startNewSession in DBSession created session with Id: ' . $this->sessionId);
         $this->prepare(
                         'INSERT INTO '
                         . $this->dbName . '.' . $this->tableName
@@ -79,7 +79,7 @@ class DBSession extends \GTFramework\DB\SimpleDB implements \GTFramework\Session
     }
 
     private function validateSession() {
-        LOG < 2 ? : $this->loger->log('validateSession in DBSession called');
+        LOG < 2 ? : $this->logger->log('validateSession in DBSession called');
 
         if ($this->sessionId) {
             $pst = $this
@@ -89,28 +89,28 @@ class DBSession extends \GTFramework\DB\SimpleDB implements \GTFramework\Session
             if (is_array($pst) && count($pst) === 1 && isset($pst[0])) {
                 $this->sessionData = unserialize($pst[0]['SessionData']);
 
-                LOG < 2 ? : $this->loger->log('validateSession in DBSession returned true');
+                LOG < 2 ? : $this->logger->log('validateSession in DBSession returned true');
                 return true;
             }
         }
-        LOG < 2 ? : $this->loger->log('validateSession in DBSession returned false');
+        LOG < 2 ? : $this->logger->log('validateSession in DBSession returned false');
         return FALSE;
     }
 
     public function __get($name) {
-        LOG < 2 ? : $this->loger->log('__get in DBSession called with: ' . $name);
+        LOG < 2 ? : $this->logger->log('__get in DBSession called with: ' . $name);
 
         return isset($this->sessionData[$name]) ? $this->sessionData[$name] : '';
     }
 
     public function __set($name, $value) {
-        LOG < 2 ? : $this->loger->log('__set in DBSession called with: ' . $name . ', ' . $value);
+        LOG < 2 ? : $this->logger->log('__set in DBSession called with: ' . $name . ', ' . $value);
 
         return $this->sessionData[$name] = $value;
     }
 
     public function destroySession() {
-        LOG < 2 ? : $this->loger->log('destroySession in DBSession called');
+        LOG < 2 ? : $this->logger->log('destroySession in DBSession called');
 
         if ($this->sessionId) {
             $this->prepare('DELETE FROM ' . $this->dbName . '.' . $this->tableName . ' WHERE SessionId = :sessId')
@@ -119,16 +119,16 @@ class DBSession extends \GTFramework\DB\SimpleDB implements \GTFramework\Session
     }
 
     public function getSessionId() {
-        LOG < 2 ? : $this->loger->log('getSessionId in DBSession called');
+        LOG < 2 ? : $this->logger->log('getSessionId in DBSession called');
 
         return $this->sessionId;
     }
 
     public function saveSession() {
-        LOG < 2 ? : $this->loger->log('__saveSession in DBSession called');
+        LOG < 2 ? : $this->logger->log('__saveSession in DBSession called');
 
         if ($this->sessionId) {
-            LOG < 2 ? : $this->loger->log('setCookie called in saveSession in DBSession');
+            LOG < 2 ? : $this->logger->log('setCookie called in saveSession in DBSession');
             $this->prepare('UPDATE ' . $this->dbName . '.' . $this->tableName . ' SET SessionData = :data, ValidUntil = :validUntil WHERE SessionId = :sessId')
                     ->execute([':data' => serialize($this->sessionData), ':validUntil' => time() + $this->lifetime, ':sessId' => $this->sessionId]);
 
@@ -137,7 +137,7 @@ class DBSession extends \GTFramework\DB\SimpleDB implements \GTFramework\Session
     }
 
     private function dbClearOldSessions() {
-        LOG < 2 ? : $this->loger->log('dbClearOldSessions in DBSession called');
+        LOG < 2 ? : $this->logger->log('dbClearOldSessions in DBSession called');
 
         $this->prepare('DELETE FROM ' . $this->dbName . '.' . $this->tableName . ' WHERE ValidUntil < :currTime')
                 ->execute([':currTime' => time()]);

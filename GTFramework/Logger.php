@@ -13,7 +13,7 @@ namespace GTFramework;
  *
  * @author ACER
  */
-class Loger {
+class Logger {
 
     private static $_instance;
     private $_arrLogs = [];
@@ -56,17 +56,17 @@ class Loger {
     }
 
     public function log($log) {
-//            echo '<pre>' . print_r($log, TRUE) . '</pre><br />';
+            echo '<pre>' . print_r($log, TRUE) . '</pre><br />';
             array_push($this->_arrLogs, date('Y M d h:s:') . gettimeofday()['usec'] . ': ' . $log);
     }
 
     /**
      * 
-     * @return \GTFramework\Loger
+     * @return \GTFramework\Logger
      */
     public static function getInstance() {
         if (self::$_instance == NULL) {
-            self::$_instance = new \GTFramework\Loger();
+            self::$_instance = new \GTFramework\Logger();
         }
         return self::$_instance;
     }

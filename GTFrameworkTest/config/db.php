@@ -25,16 +25,18 @@ $cfg['MSSQL'] = '127.0.0.1';
 $cfg['Administration']['dbName'] = 'gtframework';
 $cfg['Administration']['dbTable'] = 'Roles';
 $cfg['Administration']['col']['Roles'] = 'RoleName';
-$cfg['Administration']['col']['UserId'] = 'Privileges';
+$cfg['Administration']['col']['UserLevel'] = 'UserLevel';
 
 $cfg['Users']['dbName'] = 'gtframework';
 $cfg['Users']['dbTable'] = 'Users';
-$cfg['Users']['colUserName'] = 'UserName';
+$cfg['Users']['col']['UserName'] = 'UserName';
 $cfg['Users']['col']['Email'] = 'Email';
 $cfg['Users']['col']['FirstName'] = 'FirstName';
 $cfg['Users']['col']['LastName'] = 'LastName';
 $cfg['Users']['col']['Password'] = 'Password';
 $cfg['Users']['col']['CreatedOn'] = 'CreatedOn';
 $cfg['Users']['col']['LastLoged'] = 'LastLoged';
+$cfg['Users']['col']['SessionId'] = 'SessionId';
+$cfg['Users']['col']['IsDeleted'] = 'IsDeleted';
 
 return $cfg;

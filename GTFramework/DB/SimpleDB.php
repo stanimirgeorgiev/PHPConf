@@ -22,7 +22,7 @@ class SimpleDB {
     private $stmt = null;
     private $logSql = null;
     private $params = [];
-    protected $loger = null;
+    protected $logger = null;
 
     public function __construct($connection = NULL) {
         if ($connection instanceof \PDO) {
@@ -33,10 +33,10 @@ class SimpleDB {
         } else {
             $this->db = \GTFramework\App::getInstance()->getConnectionToDB($this->connection);
         }
-        if (!$this->loger) {
-            $this->loger = \GTFramework\App::getLoger();
+        if (!$this->logger) {
+            $this->logger = \GTFramework\App::getLoger();
             }
-        LOG < 0 ?: $this->loger->log('__constructor in SimpleDB called with param: ' . print_r($connection,TRUE));
+        LOG < 0 ?: $this->logger->log('__constructor in SimpleDB called with param: ' . print_r($connection,TRUE));
     }
 
     /**
@@ -47,25 +47,34 @@ class SimpleDB {
      * @return \GTFramework\DB\SimpleDB 
      */
     public function prepare($sql, $pdoOptions = []) {
-        LOG < 2 ?: $this->loger->log('parepare in SimpleDB called with sql: ' . $sql  . ' pdoOptions: ' . print_r($pdoOptions,TRUE));
+        LOG < 2 ?: $this->logger->log('parepare in SimpleDB called with sql: ' . $sql  . ' pdoOptions: ' . print_r($pdoOptions,TRUE));
         $this->stmt = $this->db->prepare($sql, $pdoOptions);
         $this->sql = $sql;
         $this->logSql = $sql;
         return $this;
     }
+    public function beginTransaction() {
+        $this->db->beginTransaction();
+        return $this;
+    }
 
+    public function commit() {
+        $this->db->commit();
+        return $this;
+    }
+    
     /**
      * 
      * @param type $params
      * @return \GTFramework\DB\SimpleDB
      */
     public function execute($params = []) {
-        LOG < 2 ?: $this->loger->log('execute in SimpleDB called with params: ' . print_r($params,TRUE));
+        LOG < 2 ?: $this->logger->log('execute in SimpleDB called with params: ' . print_r($params,TRUE));
         if (isset($params)) {
             $this->params = $params;
         }
         if ($this->logSql) {
-            LOG < 2 ?: $this->loger->log('Executed sql: ' . $this->logSql . ' with params: ' . print_r($params,TRUE));
+            LOG < 2 ?: $this->logger->log('Executed sql: ' . $this->logSql . ' with params: ' . print_r($params,TRUE));
         }
         $this->stmt->execute($this->params);
         return $this;

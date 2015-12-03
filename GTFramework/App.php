@@ -27,7 +27,7 @@ class App {
     private $_config = null;
     private $router = null;
     private static $appConfig = null;
-    private static $loger = null;
+    private static $logger = null;
     private $connectionsDB = [];
     private $_session = null;
 
@@ -48,7 +48,7 @@ class App {
         if ($this->_config->_configFolder == NULL) {
             $this->_config->setConfigFolder('../config');
         }
-        self::$loger = \GTFramework\Loger::getInstance();
+        self::$logger = \GTFramework\Logger::getInstance();
     }
 
     /**
@@ -90,14 +90,14 @@ class App {
     }
 
     public function run() {
-        self::$loger->setLogGlobal();
-        LOG < 0 ? : self::$loger->log('run method in App started.');
+        self::$logger->setLogGlobal();
+        LOG < 0 ? : self::$logger->log('run method in App started.');
         $this->_frontController = \GTFramework\FrontController::getInstance();
 
-        LOG < 2 ? : self::$loger->log('getInstance in App to FrontController called');
+        LOG < 2 ? : self::$logger->log('getInstance in App to FrontController called');
         $this->appConfig = \GTFramework\App::getInstance()->getConfig()->app;
 
-        LOG < 2 ? : self::$loger->log('getConfig method in App called with app param.');
+        LOG < 2 ? : self::$logger->log('getConfig method in App called with app param.');
         if (isset($this->appConfig['default_router']) && $this->appConfig['default_router']) {
 
             if (!$this->router) {
@@ -108,14 +108,14 @@ class App {
 
             $this->_frontController->setRouter(new $this->router);
 
-            LOG < 2 ? : self::$loger->log('Router in App set to: ' . $this->router);
+            LOG < 2 ? : self::$logger->log('Router in App set to: ' . $this->router);
         } else {
-            LOG < 1 ? : self::$loger->log('Created exeption in App because of missing default_router key in app config', 1);
+            LOG < 1 ? : self::$logger->log('Created exeption in App because of missing default_router key in app config', 1);
             throw new \Exception('Default Router is not set', 500);
         }
 
         $_sess = $this->appConfig['session'];
-        LOG < 0 ? : self::$loger->log('run in App retrieved session configuration: ' . print_r($_sess, TRUE));
+        LOG < 0 ? : self::$logger->log('run in App retrieved session configuration: ' . print_r($_sess, TRUE));
 
         if ($_sess['autostart'] === true) {
             if ($_sess['type'] === 'native') {
@@ -127,7 +127,7 @@ class App {
                         $_sess['secure'],
                         $_sess['HttpOnly']);
 
-                LOG < 0 ? : self::$loger->log('run in App created session of type: ' . $_sess['type'] . ' with: ' . print_r($_sess, TRUE));
+                LOG < 0 ? : self::$logger->log('run in App created session of type: ' . $_sess['type'] . ' with: ' . print_r($_sess, TRUE));
             } else if ($_sess['type'] === 'database') {
                 $_s = new \GTFramework\Sessions\DBSession(
                         $_sess['dbName'],
@@ -141,7 +141,7 @@ class App {
                         $_sess['HttpOnly']
                        );
 
-                LOG < 0 ? : self::$loger->log('run in App created session of type ' . $_sess['type'] . ' with: ' . print_r($_sess, TRUE));
+                LOG < 0 ? : self::$logger->log('run in App created session of type ' . $_sess['type'] . ' with: ' . print_r($_sess, TRUE));
             } else {
 
                 throw new \Exception('Received invalid session type: ' . $_sess['type'], 500);
@@ -150,13 +150,13 @@ class App {
             $this->setSession($_s);
         }
 
-        LOG < 1 ? : self::$loger->log('run in App called dispatch method in FrontController');
+        LOG < 1 ? : self::$logger->log('run in App called dispatch method in FrontController');
 
         $this->_frontController->processReguest();
     }
 
     public function setSession(\GTFramework\Sessions\ISession $session) {
-        LOG < 1 ? : self::$loger->log('setSession in App called');
+        LOG < 1 ? : self::$logger->log('setSession in App called');
 
         $this->_session = $session;
     }
@@ -166,7 +166,7 @@ class App {
      * @return \GTFramework\Sessions\ISession
      */
     public function getSession() {
-        LOG < 2 ? : self::$loger->log('getSession in App called');
+        LOG < 2 ? : self::$logger->log('getSession in App called');
 
         return $this->_session;
     }
@@ -188,28 +188,28 @@ class App {
     }
 
     function get_frontController() {
-        LOG < 1 ? : self::$loger->log('get_frontController method in App called.');
+        LOG < 1 ? : self::$logger->log('get_frontController method in App called.');
         return $this->_frontController;
     }
 
     function set_frontController(\GTFramework\FrontController $_frontController) {
-        LOG < 1 ? : self::$loger->log('set_frontController method in App called with params: ' . $_frontController);
+        LOG < 1 ? : self::$logger->log('set_frontController method in App called with params: ' . $_frontController);
         $this->_frontController = $_frontController;
     }
 
     public function getRouterByName() {
-        LOG < 2 ? : self::$loger->log('getRouterByName in App method called ');
+        LOG < 2 ? : self::$logger->log('getRouterByName in App method called ');
         return $this->router;
     }
 
     public function setRouterByName($router) {
-        self::$loger->setLogGlobal();
-        LOG < 2 ? : self::$loger->log('setRouterByName in App method called with params: ' . $router);
+        self::$logger->setLogGlobal();
+        LOG < 2 ? : self::$logger->log('setRouterByName in App method called with params: ' . $router);
         $this->router = $router;
     }
 
     public static function getLoger() {
-        return self::$loger;
+        return self::$logger;
     }
 
     /**
@@ -228,7 +228,7 @@ class App {
         return selF::$appConfig;
     }
     public function __destruct() {
-        LOG < 2 ? : self::$loger->log('__destructor in App called');
+        LOG < 2 ? : self::$logger->log('__destructor in App called');
         if ($this->_session != NULL) {
             $this->_session->saveSession();
         }

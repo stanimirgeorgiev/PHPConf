@@ -17,8 +17,8 @@ class BaseModel extends \GTFramework\DB\SimpleDB {
 
     private static $_instance = null;
 
-    private function __construct(\GTFramework\Loger $loger) {
-        $this->loger = $loger;
+    private function __construct(\GTFramework\Logger $loger) {
+        $this->logger = $loger;
     }
 
     /**

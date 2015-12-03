@@ -17,11 +17,11 @@ class Kernel {
 
     private $params =null;
     private $method = null;
-    private $loger = null;
+    private $logger = null;
     private $class = null;
 
-    public function __construct(\GTFramework\Loger $loger) {
-        $this->loger = $loger;
+    public function __construct(\GTFramework\Logger $loger) {
+        $this->logger = $loger;
     }
     public function findController($class, $method) {
         $this->class = $class;

@@ -23,10 +23,10 @@ class FrontController {
     private $bundle = null;
     private $routes = null;
     private $router = null;
-    private $loger = null;
+    private $logger = null;
 
-    private function __construct(\GTFramework\Loger $loger) {
-        $this->loger = $loger;
+    private function __construct(\GTFramework\Logger $loger) {
+        $this->logger = $loger;
     }
 
     public function getRouter() {
@@ -39,9 +39,9 @@ class FrontController {
 
     public function processReguest() {
         $_uri = $this->router->getURI();
-        LOG < 0 ?: $this->loger->log('dispatch in FrontController started with route params: '.$_uri);
+        LOG < 0 ?: $this->logger->log('dispatch in FrontController started with route params: '.$_uri);
         if ($this->router == NULL) {
-            LOG < 0 ?: $this->loger->log('router is null');
+            LOG < 0 ?: $this->logger->log('router is null');
             throw new \Exception('Router is not set', 500);
         }
 //        $defaultRouter = \GTFramework\App::getInstance()->getConfig()->app;
@@ -55,7 +55,7 @@ class FrontController {
 //        '<pre>'.var_dump($this->routes).'</pre>'.'<br />';
 //        var_dump($_uri).'<br />';
         if (is_array($this->routes) && count($this->routes) > 0) {
-            LOG < 2 ?: $this->loger->log('dispatch in FrontController checking for bundle in app config');
+            LOG < 2 ?: $this->logger->log('dispatch in FrontController checking for bundle in app config');
             foreach ($this->routes as $k => $v) {
 //                echo '<pre>' . print_r($_uri, TRUE) . '</pre><br />';
                 $checkIsBundle = explode('/', $_uri)[0];
@@ -84,7 +84,7 @@ class FrontController {
             throw new \Exception('Missing default routes confiuration', 500);
         }
         if ($this->ns == NULL && isset($this->routes['*']['namespace'])) {
-            LOG < 2 ?: $this->loger->log('dispatch in FrontController checking for default namespace in app config');
+            LOG < 2 ?: $this->logger->log('dispatch in FrontController checking for default namespace in app config');
             $this->ns = $this->routes['*']['namespace'];
             if (isset($this->routes['*']['controller'])) {
                 $_rc = $this->routes['*']['controller'];
@@ -125,12 +125,12 @@ class FrontController {
         
 //        \GTFramework\Loader::setCheck(TRUE);
         
-        LOG < 0 ?: $this->loger->log('Controller with name: ' . ucfirst($this->controller) . ' caled from dispatch in FrontController');
+        LOG < 0 ?: $this->logger->log('Controller with name: ' . ucfirst($this->controller) . ' caled from dispatch in FrontController');
         
         $f = $this->ns . '\\' . ucfirst($this->controller);
         echo '<pre>' . print_r($f, TRUE) . '</pre><br />';
         
-        LOG < 2 ?: $this->loger->log('Method called with name: ' . $this->method . ' in Controller: ' . $this->controller . ' caled from dispatch in FrontController');
+        LOG < 2 ?: $this->logger->log('Method called with name: ' . $this->method . ' in Controller: ' . $this->controller . ' caled from dispatch in FrontController');
         
         $newController = new $f();
         
@@ -142,7 +142,7 @@ class FrontController {
     }
 
     public function getDefaultControler() {
-        LOG < 2 ?: $this->loger->log('getDefaultControler in FrontController started');
+        LOG < 2 ?: $this->logger->log('getDefaultControler in FrontController started');
         if ($this->bundle != NULL && $this->bundle != '*') {
             if (isset($this->routes[$this->bundle])) {
                 if (isset($this->routes[$this->bundle]['default_controller'])) {
@@ -168,7 +168,7 @@ class FrontController {
     }
 
     public function getDefaultMethod() {
-        LOG < 2 ?: $this->loger->log('getDefaultMethod in FrontController started');
+        LOG < 2 ?: $this->logger->log('getDefaultMethod in FrontController started');
         if ($this->bundle != NULL && $this->bundle != '*') {
             if (isset($this->routes[$this->bundle])) {
                 if (isset($this->routes[$this->bundle]['default_method'])) {

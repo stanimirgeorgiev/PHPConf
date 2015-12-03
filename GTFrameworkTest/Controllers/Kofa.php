@@ -89,7 +89,8 @@ class Kofa implements \Controllers\IController {
             }
         }
         $model = new \Models\AdministrationModel();
-        $model->getRoleByName('Administrator');
+//        $model->getRoleByName('Administrator');
+        $model->getRoleUserLevel(0);
               
 //                  switch ($a);
 //        echo '<pre>' . print_r($anno, TRUE) . '</pre><br />';

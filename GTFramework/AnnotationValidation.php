@@ -16,9 +16,9 @@ namespace GTFramework;
 class AnnotationValidation {
 
     /**
-     * @var \GTFramework\Loger
+     * @var \GTFramework\Logger
      */
-    private $loger = null;
+    private $logger = null;
     private $class = null;
     private $method = null;
     private $reflection = null;
@@ -52,8 +52,8 @@ class AnnotationValidation {
     ];
     static $_instance = null;
 
-    private function __construct(\GTFramework\Loger $loger, \ReflectionClass $reflection) {
-        $this->loger = $loger;
+    private function __construct(\GTFramework\Logger $loger, \ReflectionClass $reflection) {
+        $this->logger = $loger;
         $this->reflection = $reflection;
     }
 

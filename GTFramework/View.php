@@ -21,11 +21,11 @@ class View {
     private $___viewDir = null;
     private $___layoutParts = [];
     private $___layoutData = [];
-    private $___loger = null;
+    private $___logger = null;
     private $___cdn = null;
     private $___method = null;
 
-    private function __construct(\GTFramework\Loger $loger) {
+    private function __construct(\GTFramework\Logger $loger) {
 
         $this->___viewPath = \GTFramework\App::getInstance()->getConfig()->app['viewPath'];
 
@@ -33,14 +33,14 @@ class View {
             $this->___viewPath = realpath('../views/');
         }
 
-        $this->___loger = $loger;
+        $this->___logger = $loger;
 
-        LOG < 2 ? : $this->___loger->log('__construct in View called with params: ' . $this->___viewPath);
+        LOG < 2 ? : $this->___logger->log('__construct in View called with params: ' . $this->___viewPath);
     }
 
     public function display($name, $data = [], $returnAsString = FALSE) {
 
-        LOG < 2 ? : $this->___loger->log('dispaly in View called with params: ' . $name . ', ' . print_r($data, true) . ', ' . $returnAsString);
+        LOG < 2 ? : $this->___logger->log('dispaly in View called with params: ' . $name . ', ' . print_r($data, true) . ', ' . $returnAsString);
 
         if (is_array($data)) {
             $this->___data = array_merge($this->___data, $data);
