@@ -199,7 +199,7 @@ class FrontController {
      */
     public static function getInstance() {
         if (self::$_instance == null) {
-            self::$_instance = new \GTFramework\FrontController(\GTFramework\App::getLoger());
+            self::$_instance = new \GTFramework\FrontController(\GTFramework\App::getLogger());
         }
         return self::$_instance;
     }

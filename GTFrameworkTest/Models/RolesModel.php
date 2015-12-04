@@ -13,7 +13,7 @@ namespace Models;
  *
  * @author ACER
  */
-class AdministrationModel extends \GTFramework\DB\SimpleDB {
+class RolesModel extends \GTFramework\DB\SimpleDB {
 
     private $dbTable = null;
     private $dbName = null;
@@ -31,7 +31,7 @@ class AdministrationModel extends \GTFramework\DB\SimpleDB {
 
     public function getRoleByName($role = null) {
         if ($role === null) {
-            throw new \Exception('getRoleByName in \Models\Administration recieved invalid role name');
+            return FALSE;
         }
         if (!$this->dbName && !$this->dbTable) {
             throw new \Exception('Invalid params dbName: ' . $this->dbName . ' and dbTable: ' . $this->dbTable, 500);
@@ -42,8 +42,8 @@ class AdministrationModel extends \GTFramework\DB\SimpleDB {
                         . ' WHERE ' . $this->dbRoles . ' LIKE :role')
                 ->execute([
                     ':role' => $role,
-                ])
-                ->getLastInsertId();
+                ]);
+        return $roles;
     }
 
     public function getRoleUserLevel($userLevel = null) {

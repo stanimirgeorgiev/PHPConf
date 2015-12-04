@@ -17,11 +17,17 @@ class AnnotationValidation {
 
     /**
      * @var \GTFramework\Logger
+     * @var \ReflectionClass
      */
     private $logger = null;
-    private $class = null;
-    private $method = null;
     private $reflection = null;
+    private $httpVerbs = array(
+        'GET' => 0,
+        'POST' => 0,
+        'PUT' => 0,
+        'DELETE' => 0
+    );
+    private $docMethod = null;
     private $annotations = array(
         'alpha' => 0,
         'alphanum' => 0,
@@ -33,6 +39,7 @@ class AnnotationValidation {
         'emails' => 0,
         'exactlength' => 0,
         'gt' => 0,
+        'http' => 0,
         'ip' => 0,
         'lt' => 0,
         'matches' => 0,
@@ -41,33 +48,58 @@ class AnnotationValidation {
         'minlength' => 0,
         'numeric' => 0,
         'regexp' => 0,
-        'required' => 0,
+//        'required' => 0,
         'unauthorized' => 0,
-        'url' => 0,
+        'url' => 0
     );
-    private $annotationsRetyrns = [
-        'Authorized' => ['You are not authorized', 401],
-        'Unauthorized' => [],
-        'Required' => ['The field is required', 500],
-    ];
-    static $_instance = null;
 
-    private function __construct(\GTFramework\Logger $loger, \ReflectionClass $reflection) {
-        $this->logger = $loger;
-        $this->reflection = $reflection;
+//    private static $_instance = null;
+//    private function __construct(\GTFramework\Logger $logger) {
+//        $this->logger = $logger;
+//    }
+
+    public function __construct($class) {
+        $this->logger = \GTFramework\App::getLogger();
+        $this->reflection = new \ReflectionClass($class);
     }
 
     public function getAnnotations() {
         
     }
 
-    public function validate($class, $method) {
+    public function validate($method) {
+        $this->getClassAnnotations($method);
+        $this->getMethodAnnotations();
         $classAnnotation = $this->getMethodAnnotations();
         $methodAnnotation = $this->getMethodAnnotations();
+        $isClassValid = TRUE;
+        foreach ($classAnnotation as $method => $params) {
+            echo '<pre>' . print_r($classAnnotation, TRUE) . '</pre><br />';
+            echo '<pre>' . print_r($method . '(' . $params . ')', TRUE) . '</pre><br />';
+            $validate = $this->$method($params);
+            if (!$validate) {
+                $isClassValid = FALSE;
+                break;
+            }
+        }
+        $isMethodValid = TRUE;
+        foreach ($methodAnnotation as $method => $params) {
+            $validate = $this->$method($params);
+            if (!$validate) {
+                $isMethodValid = FALSE;
+                break;
+            }
+        }
+        if ($isMethodValid && $isClassValid) {
+            return TRUE;
+        }
+        return FALSE;
     }
 
-    public function getMethodAnnotations($method = null) {
-        $docMethod = $this->reflection->getMethod($method)->getDocComment();
+    public function getMethodAnnotations() {
+
+        $docMethod = $this->docMethod;
+
         if (!$docMethod) {
             return [];
         }
@@ -75,11 +107,18 @@ class AnnotationValidation {
         array_pop($docMethod);
         array_shift($docMethod);
         $docMethod = array_filter($docMethod, 'trim');
-        return $docMethod;
+        $annotationArray = [];
+        foreach ($docMethod as $a) {
+            $a = explode('[', trim($a));
+            $arg = rtrim(array_pop($a), ']');
+            $annotationArray[strtolower($a[0])] = $arg;
+        }
+        return $annotationArray;
     }
 
-    public function getClassAnnotations() {
+    public function getClassAnnotations($method) {
         $docClass = $this->reflection->getDocComment();
+        $this->docMethod = $this->reflection->getMethod($method)->getDocComment();
         if (!$docClass) {
             return [];
         }
@@ -87,14 +126,25 @@ class AnnotationValidation {
         array_pop($docClass);
         array_shift($docClass);
         $docClass = array_filter($docClass, 'trim');
-        return $docClass;
+        $annotationArray = [];
+        foreach ($docClass as $a) {
+            $a = explode('[', trim($a));
+            $arg = rtrim(array_pop($a), ']');
+            $annotationArray[strtolower($a[0])] = $arg;
+        }
+        return $annotationArray;
     }
 
-    public static function authorized($Role) {
-        $roles = \Models\Administration::getInstance()->getByRole($role);
-        return $val1 == $val2;
+    public static function authorized($role = 30) {
+        $userLevel = new \Models\RolesModel();
+        $userLevel->getRoleByName($role);
+        return (bool) $userLevel;
     }
-  
+
+    public static function unauthorized() {
+        return TRUE;
+    }
+
     public static function matches($val1, $val2) {
         return $val1 == $val2;
     }
@@ -176,6 +226,15 @@ class AnnotationValidation {
         return (bool) preg_match($val2, $val1);
     }
 
+    public function http($http = NULL) {
+
+        $http = explode(' ', $http);
+        if (isset($this->httpVerbs[$http[0]])) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
     public static function custom($val1, $val2) {
         if ($val2 instanceof \Closure) {
             return (boolean) call_user_func($val2, $val1);
@@ -184,15 +243,15 @@ class AnnotationValidation {
         }
     }
 
-    /**
-     * 
-     * @return \GTFramework\AnnotationValidation
-     */
-    public static function getInstance() {
-        if (self::$_instance == null) {
-            self::$_instance = new \GTFramework\AnnotationValidation(\GTFramework\App::getLoger(), new \ReflectionClass);
-        }
-        return self::$_instance;
-    }
-
+//
+//    /**
+//     * 
+//     * @return \GTFramework\AnnotationValidation
+//     */
+//    public static function getInstance() {
+//        if (self::$_instance == null) {
+//            self::$_instance = new \GTFramework\AnnotationValidation(\GTFramework\App::getLogger());
+//        }
+//        return self::$_instance;
+//    }
 }

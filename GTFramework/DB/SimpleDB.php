@@ -34,7 +34,7 @@ class SimpleDB {
             $this->db = \GTFramework\App::getInstance()->getConnectionToDB($this->connection);
         }
         if (!$this->logger) {
-            $this->logger = \GTFramework\App::getLoger();
+            $this->logger = \GTFramework\App::getLogger();
             }
         LOG < 0 ?: $this->logger->log('__constructor in SimpleDB called with param: ' . print_r($connection,TRUE));
     }

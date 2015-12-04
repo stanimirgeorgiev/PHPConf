@@ -208,7 +208,7 @@ class App {
         $this->router = $router;
     }
 
-    public static function getLoger() {
+    public static function getLogger() {
         return self::$logger;
     }
 

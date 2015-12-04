@@ -14,23 +14,22 @@
 
 namespace Controllers;
 
-class Index implements \Controllers\IController{
-/**
- * KAKAKAKKKAKAK
- * @param type \Controllers\Index
- */
+class Index implements \Controllers\IController {
+
+    /**
+     * *http[GET Home]* *
+     * @param type \Controllers\Index
+     */
+    
     public function index($param) {
         $token = uniqid();
-//        if (isset($_SESSION['token'])) {
-//        $_SESSION['token'] = $token;
-//        }
         $_SESSION['token'] = $token;
         $view = \GTFramework\View::getInstance();
         $view->username = 'Stanaka';
         $view->title = 'Home';
         $view->appendToLayout('body2', 'Admin/Index.php');
-        $view->appendToLayout('body1','PartialViews/Register.php');
-        $view->display('Layouts/Default.php', ['token'=>[$token]]);
+        $view->appendToLayout('body1', 'PartialViews/Register.php');
+        $view->display('Layouts/Default.php', ['token' => [$token]]);
     }
 
 }

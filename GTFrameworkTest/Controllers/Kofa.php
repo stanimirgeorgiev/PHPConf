@@ -16,7 +16,7 @@ namespace Controllers;
 
 /**
  * 
- * *Required[]* *
+ * *Authorized[]* *
  */
 class Kofa implements \Controllers\IController {
 
@@ -61,7 +61,7 @@ class Kofa implements \Controllers\IController {
      * *Unauthorized[]* *
      * *Unauthorized[]* *
      * *Unauthorized[]* *
-     * 
+     * *http[GET Home]* * 
      * @param type $params
      * @return void proba
      * 
@@ -73,32 +73,44 @@ class Kofa implements \Controllers\IController {
             echo '<pre>' . print_r('No annotations , 200', TRUE) . '</pre><br />';
             return ['No annotations', 200];
         }
-        $annotArray = [];
+        $annotationArray = [];
         foreach ($anno as $a) {
             $a = explode('[', trim($a));
             $arg = rtrim(array_pop($a), ']');
 //            $this->
-            $annotArray[$a[0]] = $arg;
+            $annotationArray[$a[0]] = $arg;
 
 //            $this->verify($a, $arg);
         }
-//        echo '<pre>' . print_r($annotArray, TRUE) . ' annotation </pre><br />';
-        foreach ($annotArray as $k => $v) {
+        echo '<pre>' . print_r($annotationArray, TRUE) . ' annotation </pre><br />';
+        foreach ($annotationArray as $k => $v) {
             if (isset($this->annotations[$k])) {
                 
             }
         }
-        $model = new \Models\AdministrationModel();
+        $model = new \Models\RolesModel();
+        $userModel = new \Models\UserModel();
 //        $model->getRoleByName('Administrator');
         $model->getRoleUserLevel(0);
-              
+//        $userModel->addUser('Roko', 'Validate@mam.com', '', '', 'sBabaNaSelo');
+        
+        echo '<pre>' . print_r($_COOKIE, TRUE) . '</pre><br />';
+        
+        $this->ref->getMethod('index');
+        
+        
+        echo '<pre>' . print_r('Proba za Validation annotation na Kofa', TRUE) . '</pre><br />';
+        $sss = new \GTFramework\AnnotationValidation('Controllers\Index');
+        $sss ->validate('index');
 //                  switch ($a);
 //        echo '<pre>' . print_r($anno, TRUE) . '</pre><br />';
     }
 
     public function getAnnotation($method) {
+
         $docMethod = $this->ref->getMethod($method)->getDocComment();
-        echo '<pre>' . print_r($this->ref->getDocComment(), TRUE) . '</pre><br />';
+
+        echo '<pre>' . print_r($docMethod, TRUE) . '</pre><br />';
         if (!$docMethod) {
             return [];
         }
@@ -115,24 +127,4 @@ class Kofa implements \Controllers\IController {
     public function roro() {
         echo 'Roro is called';
     }
-
-    public function verify($a, $arg) {
-        switch ($a) {
-            case 'Authorized':
-                echo '<pre>' . print_r('Method ?????? is authorized', TRUE) . '</pre><br />';
-                break;
-
-            case 'Unauthorized':
-                echo '<pre>' . print_r('Method ?????? is unauthorized', TRUE) . '</pre><br />';
-                break;
-
-            case 'Required':
-                echo '<pre>' . print_r('Method ?????? is required', TRUE) . '</pre><br />';
-                break;
-
-            default:
-                break;
-        }
-    }
-
 }
