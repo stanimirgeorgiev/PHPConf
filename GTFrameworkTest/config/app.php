@@ -32,11 +32,11 @@ $cfg['default_logging'] = 2;
  * $cfg['session']['type']= 'native';
  */
 $cfg['session']['autostart']= true;
-$cfg['session']['type']= 'database';
+$cfg['session']['type']= 'native';
 $cfg['session']['name']= '__sess';
-$cfg['session']['lifetime']= 1500;
+$cfg['session']['lifetime']= 5;
 $cfg['session']['path']= DIRECTORY_SEPARATOR;
-$cfg['session']['domain']= '';
+$cfg['session']['domain']= 'localhost';
 $cfg['session']['secure']= FALSE;
 $cfg['session']['HttpOnly']= true;
 $cfg['session']['dbConnection']= 'session';

@@ -68,10 +68,8 @@ class AnnotationValidation {
     }
 
     public function validate($method) {
-        $this->getClassAnnotations($method);
-        $this->getMethodAnnotations();
-        $classAnnotation = $this->getMethodAnnotations();
-        $methodAnnotation = $this->getMethodAnnotations();
+        $classAnnotation = $this->getClassAnnotations();
+        $methodAnnotation = $this->getMethodAnnotations($method);
         $isClassValid = TRUE;
         foreach ($classAnnotation as $method => $params) {
             echo '<pre>' . print_r($classAnnotation, TRUE) . '</pre><br />';
@@ -96,10 +94,8 @@ class AnnotationValidation {
         return FALSE;
     }
 
-    public function getMethodAnnotations() {
-
-        $docMethod = $this->docMethod;
-
+    public function getMethodAnnotations($method) {
+        $docMethod = $this->reflection->getMethod($method)->getDocComment();
         if (!$docMethod) {
             return [];
         }
@@ -116,9 +112,8 @@ class AnnotationValidation {
         return $annotationArray;
     }
 
-    public function getClassAnnotations($method) {
+    public function getClassAnnotations() {
         $docClass = $this->reflection->getDocComment();
-        $this->docMethod = $this->reflection->getMethod($method)->getDocComment();
         if (!$docClass) {
             return [];
         }
@@ -138,6 +133,8 @@ class AnnotationValidation {
     public static function authorized($role = 30) {
         $userLevel = new \Models\RolesModel();
         $userLevel->getRoleByName($role);
+//        $loggedUser = new \Models\UserModel();
+//        $loggedUser->
         return (bool) $userLevel;
     }
 

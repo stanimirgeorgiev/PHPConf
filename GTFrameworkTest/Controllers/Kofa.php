@@ -77,10 +77,8 @@ class Kofa implements \Controllers\IController {
         foreach ($anno as $a) {
             $a = explode('[', trim($a));
             $arg = rtrim(array_pop($a), ']');
-//            $this->
             $annotationArray[$a[0]] = $arg;
 
-//            $this->verify($a, $arg);
         }
         echo '<pre>' . print_r($annotationArray, TRUE) . ' annotation </pre><br />';
         foreach ($annotationArray as $k => $v) {
@@ -90,20 +88,20 @@ class Kofa implements \Controllers\IController {
         }
         $model = new \Models\RolesModel();
         $userModel = new \Models\UserModel();
-//        $model->getRoleByName('Administrator');
         $model->getRoleUserLevel(0);
-//        $userModel->addUser('Roko', 'Validate@mam.com', '', '', 'sBabaNaSelo');
-        
-        echo '<pre>' . print_r($_COOKIE, TRUE) . '</pre><br />';
+//        $userModel->addUser('Xoko', 'Validate@mam.com', '', '', 'sBabaNaSelo');
+        var_dump($userModel->verifyPassword('sBabaNaSelo', 'Qoko'));
+        echo '<pre>' . print_r('Otgore e verificiran userskata parola', TRUE) . '</pre><br />';
         
         $this->ref->getMethod('index');
         
-        
         echo '<pre>' . print_r('Proba za Validation annotation na Kofa', TRUE) . '</pre><br />';
-        $sss = new \GTFramework\AnnotationValidation('Controllers\Index');
-        $sss ->validate('index');
-//                  switch ($a);
-//        echo '<pre>' . print_r($anno, TRUE) . '</pre><br />';
+        
+        $sss = new \GTFramework\AnnotationValidation('Controllers\Kofa');
+        $isTrue = $sss ->validate('index');
+        var_dump($isTrue);
+        $ppo = new \Models\UserModel();
+        var_dump($ppo->getUserBySession());
     }
 
     public function getAnnotation($method) {

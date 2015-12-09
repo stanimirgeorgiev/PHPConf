@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <?= $this->helper('\Helpers\LoadCDN', 'loadAll'); ?>
+        <?= \GTFramework\Kernel::getInstance()->helper('\Helpers\LoadCDN', 'loadAll'); ?>
         <title><?= $this->title; ?></title>
     </head>
     <body>

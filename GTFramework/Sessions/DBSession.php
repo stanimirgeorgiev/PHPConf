@@ -25,7 +25,7 @@ class DBSession extends \GTFramework\DB\SimpleDB implements \GTFramework\Session
     private $httpOnly = TRUE;
     private $sessionId = null;
     private $sessionData = [];
-//    protected $loger = null;
+    protected $logger = null;
 
     public function __construct($dbName = null, $dbConnection = null, $tableName = 'sessions', $sessionName = '__sess', $lifetime = 3600, $path = null, $domain = null, $secure = false, $httpOnly = TRUE) {
         $this->dbName = $dbName;
@@ -37,8 +37,9 @@ class DBSession extends \GTFramework\DB\SimpleDB implements \GTFramework\Session
         $this->domain = $domain;
         $this->secure = $secure;
         $this->httpOnly = $httpOnly;
+        $this->logger = \GTFramework\App::getLogger();
         LOG < 0 ? : $this->logger->log('__construct in DBSession called with params: ' . 'dbName: ' . $dbName . ', dbConnection = ' . $dbConnection . ', tableName = ' . $tableName . ', sessionName = ' . $sessionName . ', lifetime = ' . $lifetime . ', path = ' . $path . ', domain = ' . $domain . ', secure = ' . $secure . ', httpOnly = ' . $httpOnly);
-        if (rand(0, 100) === 50) {
+        if (rand(0, 100) === 52) {
 //            echo '<pre>' . print_r('------------------CLEAR-----CLEAR----CLEAR-------------', TRUE) . '</pre><br />';
             $this->dbClearOldSessions();
         }

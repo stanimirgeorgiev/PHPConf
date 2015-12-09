@@ -17,11 +17,11 @@ namespace Helpers;
 class LoadCDN {
 
     private $content = null;
-    private $loger;
+    private $logger;
 
     public function __construct() {
         $this->content = \GTFramework\View::getInstance()->getCDN();
-        $this->loger = \GTFramework\App::getLoger();
+        $this->logger = \GTFramework\App::getLogger();
     }
 
     public function loadCDNScripts() {
@@ -30,13 +30,11 @@ class LoadCDN {
         if ($this->content === NULL) {
             throw new \Exception('Problem loading configuration file cdn', 500);
         }
-//        echo '<pre>' . print_r($this->content['script'], TRUE) . '</pre><br />';
         foreach ($this->content['script'] as $link) {
 
             if (!trim($link)) {
                 throw new \Exception('Problem loading configuration file cdn', 500);
             }
-//            echo '<pre>' . print_r($link, TRUE) . '</pre><br />';
             array_push($htmlContent, '<script src="' . $link . '"></script>');
         }
 
@@ -54,7 +52,6 @@ class LoadCDN {
         if ($this->content === NULL) {
             throw new \Exception('Problem loading configuration file cdn', 500);
         }
-//        echo '<pre>' . print_r($this->content['script'], TRUE) . '</pre><br />';
         foreach ($this->content['css'] as $link) {
 
             if (!trim($link)) {

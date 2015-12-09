@@ -30,48 +30,12 @@ final class Loader {
 
     public static function autoload($class) {
         $counter = 0;
-//        echo $class.'~~~~~~~~~~~</pre><br />';
-//        $trace = debug_backtrace();
-//        $caller = $trace[1];
-//        foreach ($trace as $k => $value) {
-//            var_dump(isset($value['class']) ? $value['class'] : '' );
-//            var_dump(isset($value['function']) ? $value['function'] : '');
-//            echo 'Arguments -------<br />';
-//            var_dump(isset($value['args']) ? $value['args'] : '');
-//            
-//            echo '<br />';
-//        echo '<pre>' . print_r($value['function'], TRUE) . '</pre><br />';
-//        echo '<pre>' . print_r($value['class'], TRUE) . '</pre><br />';
-//        }
-//        echo '<pre>' . print_r('', TRUE) . '</pre><br />';
-//        echo '<pre>' . print_r($trace, TRUE) . '</pre><br />';
-
-//        if ($counter === 4) {
-//            die;
-//        }
-        $counter++;
-//        echo "Called by {$caller['function']}";
-//        if (isset($caller['class']))
-//            echo " in {$caller['class']} <br />";
-
         self::loadClass($class);
     }
 
     public static function loadClass($class) {
         if ($class == 'Exception') {
             throw new \Exception('Unhandled exeption has occured and has been passed to autoload.', 500);
-        }
-//        var_dump($class);
-        if (self::$check) {
-
-//        $trace = debug_backtrace();
-//        $caller = $trace[1];
-//
-//        echo "Called by {$caller['function']}";
-//        if (isset($caller['class']))
-//            echo " in {$caller['class']}";
-
-            echo '<pre>' . print_r('Checked', TRUE) . '~~~~~~~~~~~</pre><br />';
         }
         $isFound = FALSE;
         foreach (self::$namespaces as $key => $value) {

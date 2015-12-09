@@ -128,7 +128,6 @@ class FrontController {
         LOG < 0 ?: $this->logger->log('Controller with name: ' . ucfirst($this->controller) . ' caled from dispatch in FrontController');
         
         $f = $this->ns . '\\' . ucfirst($this->controller);
-        echo '<pre>' . print_r($f, TRUE) . '</pre><br />';
         
         LOG < 2 ?: $this->logger->log('Method called with name: ' . $this->method . ' in Controller: ' . $this->controller . ' caled from dispatch in FrontController');
         

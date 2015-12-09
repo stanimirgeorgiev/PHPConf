@@ -95,27 +95,6 @@ class View {
         return ob_get_clean();
     }
 
-    public function helper($helperClass, $helperMethod) {
-
-        if (!trim($helperClass) && !trim($helperMethod)) {
-            throw new \Exception('Helpers require valid class full name and method name', 500);
-        }
-
-        if (!class_exists($helperClass)) {
-            echo '<pre>' . print_r($helperClass, TRUE) . '</pre><br />';
-            throw new \Exception('Class with name: ' . $helperClass . ' doesn\'t exist in namespace', 500);
-        }
-
-        $helperObject = new $helperClass;
-
-        if (!method_exists($helperObject, $helperMethod)) {
-            throw new \Exception('Method with name: ' . $helperMethod . ' do not exist in class: ' . print_r($helperObject, TRUE), 500);
-        }
-
-        return $helperObject->$helperMethod();
-    }
-    
-
     public function addView($viewClass, $viewMethod) {
 
         if (!trim($viewClass) && !trim($viewMethod)) {
@@ -183,7 +162,7 @@ class View {
     public static function getInstance() {
         
         if (self::$_instance == NULL) {
-            self::$_instance = new \GTFramework\View(\GTFramework\App::getLoger());
+            self::$_instance = new \GTFramework\View(\GTFramework\App::getLogger());
         }
         
         return self::$_instance;

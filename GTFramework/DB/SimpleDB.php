@@ -46,9 +46,10 @@ class SimpleDB {
      * @param type $pdoOptions
      * @return \GTFramework\DB\SimpleDB 
      */
-    public function prepare($sql, $pdoOptions = []) {
+    public function prepare($sql,$params = [], $pdoOptions = []) {
         LOG < 2 ?: $this->logger->log('parepare in SimpleDB called with sql: ' . $sql  . ' pdoOptions: ' . print_r($pdoOptions,TRUE));
         $this->stmt = $this->db->prepare($sql, $pdoOptions);
+        $this->params = $params;
         $this->sql = $sql;
         $this->logSql = $sql;
         return $this;

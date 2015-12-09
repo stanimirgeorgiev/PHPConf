@@ -6,9 +6,7 @@ class Register {
 
     public function addRegisterForm() {
         
-    echo '<pre>' . print_r(substr(password_hash('MamaMiKupiDnes',1),7), TRUE) . '</pre><br />';
-    echo '<pre>' . print_r(file_get_contents('php://input'), TRUE) . '------------</pre><br />';
-    echo    '<form method="POST" target="">
+    echo    '<form method="POST" action="Register">
                 <div class="form-group">
                     <label for="username">Your username</label>
                     <input class="form-control" type="text" name="username" placeholder="Username"/>
@@ -25,7 +23,7 @@ class Register {
                     <label for="passwordRe">Input a password</label>
                     <input class="form-control" type="password" name="passwordRe" placeholder="Retype the password"/>
                 </div>
-                    <input type="hidden" name="AFToken" value="' . \GTFramework\View::getInstance()->helper('\Helpers\AFToken', 'getToken') . '"/>
+                    <input type="hidden" name="AFToken" value="' . \GTFramework\Kernel::getInstance()->helper('\Helpers\AFToken', 'getToken') . '"/>
                     <button type="submit" class="btn btn-default">Register</button>
             </form>'.PHP_EOL;
     }

@@ -21,15 +21,13 @@ class Index implements \Controllers\IController {
      * @param type \Controllers\Index
      */
     
-    public function index($param) {
-        $token = uniqid();
-        $_SESSION['token'] = $token;
+    public function index($uri) {
         $view = \GTFramework\View::getInstance();
         $view->username = 'Stanaka';
         $view->title = 'Home';
         $view->appendToLayout('body2', 'Admin/Index.php');
         $view->appendToLayout('body1', 'PartialViews/Register.php');
-        $view->display('Layouts/Default.php', ['token' => [$token]]);
+        $view->display('Layouts/Default.php', []);
     }
 
 }

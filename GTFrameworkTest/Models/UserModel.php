@@ -47,7 +47,7 @@ class UserModel extends \GTFramework\DB\SimpleDB {
     $username = null, $email = null, $firstName = null, $lastName = null, $password = null
     ) {
         if ($username === null) {
-            throw new \Exception('addUser in \Models\Administration recieved invalid user');
+            throw new \Exception('addUser in \Models\UserModels received invalid username', 401);
         }
         if (!$this->dbName && !$this->dbTable) {
             throw new \Exception('Invalid params dbName: ' . $this->dbName . ' and dbTable: ' . $this->dbTable, 500);
@@ -55,7 +55,7 @@ class UserModel extends \GTFramework\DB\SimpleDB {
 
         $usernameUsed = $this->
                 prepare(
-                        'SELECT Username FROM '
+                        'SELECT ' . $this->username . ', ' . $this->isDeleted . '  FROM '
                         . $this->dbName . '.' . $this->dbTable
                         . ' WHERE '
                         . $this->username
@@ -67,16 +67,20 @@ class UserModel extends \GTFramework\DB\SimpleDB {
                 fetchAllAssoc();
 
         if (!empty($usernameUsed)) {
-            throw new \Exception('User with name: ' . $username . ' exists', 400);
+            foreach ($usernameUsed as $user) {
+                echo '<pre>' . print_r($user, TRUE) . '</pre><br />';
+                if ($user[$this->isDeleted] == 0) {
+                    throw new \Exception('User with name: ' . $username . ' exists', 400);
+                    break;
+                }
+            }
         }
 
-        if (!isset($_COOKIE['__sess'])) {
-            if (empty($_SESSION)) {
-                throw new \Exception('No session is set', 500);
-            }
-            $session = $_SESSION['__sess'];
+        $session = $this->getSession();
+        if (!$session) {
+            echo '<pre>' . print_r($session, TRUE) . ' session before ading usr in db</pre><br />';
+            throw new \Exception('No session', 401);
         }
-        $session = $_COOKIE['__sess'];
 
         try {
             $this->
@@ -92,11 +96,12 @@ class UserModel extends \GTFramework\DB\SimpleDB {
                         ':Email' => $email,
                         ':FirstName' => $firstName,
                         ':LastName' => $lastName,
-                        ':Password' => substr(password_hash($password, 1), 7),
+//                        ':Password' => substr(password_hash($password, 1), 7),
+                        ':Password' => password_hash($password, 1),
                         ':CreatedOn' => time(),
                         ':LastLoged' => time(),
                         ':SessionId' => $session,
-                        ':IsDeleted' => 1,
+                        ':IsDeleted' => 0
             ]);
             $lastId = $this->getLastInsertId();
             echo '<pre>' . print_r($lastId, TRUE) . '</pre><br />';
@@ -113,6 +118,95 @@ class UserModel extends \GTFramework\DB\SimpleDB {
         } catch (\Exception $ex) {
             throw new \Exception('Problem adding user with username: ' . $username . ' with exception: ' . $ex, 500);
         }
+    }
+
+    public function getUserBySession() {
+        $sess = $this->getSession();
+        if (!$sess) {
+            return [];
+        }
+        $userBySession = $this->
+                prepare(
+                        'SELECT * FROM '
+                        . $this->dbName . '.' . $this->dbTable
+                        . ' WHERE '
+                        . $this->sessionId
+                        . ' LIKE :sessId'
+                        . ' AND '
+                        . $this->isDeleted
+                        . ' = 0'
+                )->
+                execute([
+                    ':sessId' => $sess
+                ])->
+                fetchAllAssoc();
+        if (!$userBySession) {
+            $userBySession = [];
+        }
+        if (empty($userBySession)) {
+            return $userBySession;
+        }
+
+        if (count($userBySession) > 1) {
+            $this->
+                    prepare(
+                            'UPDATE '
+                            . $this->dbName . '.' . $this->dbTable
+                            . ' SET ' . $this->sessionId . ' = null '
+                            . ' WHERE '
+                            . $this->sessionId
+                            . ' LIKE :SessionId')->
+                    execute([
+                        ':SessionId' => $userBySession[0][$this->sessionId]
+            ]);
+
+            $userBySession = [];
+        }
+        if (empty($userBySession)) {
+            return $userBySession;
+        }
+        if ($userBySession[0][$this->isDeleted] == 1) {
+            return [];
+        }
+        return $userBySession;
+    }
+
+    public function getSession() {
+        if (!isset($_COOKIE['__sess'])) {
+            if (empty($_SESSION)) {
+                return FALSE;
+            }
+            return $_SESSION['__sess'];
+        }
+        return $_COOKIE['__sess'];
+    }
+
+    public function verifyPassword($password, $username) {
+
+        $dbPass = $this->
+                        prepare(
+                                'SELECT '
+                                .$this->password
+                                .' FROM '
+                                . $this->dbName . '.' . $this->dbTable
+                                . ' WHERE '
+                                . $this->username
+                                . ' LIKE :username'
+                                . ' AND '
+                                . $this->isDeleted
+                                . ' = 0'
+                        )->
+                        execute([
+                            ':username' => $username
+                        ])->
+                        fetchAllAssoc();
+        if (count($dbPass) !== 1) {
+            return false;
+        }
+        if (!password_verify($password, $dbPass[0][$this->password])) {
+            return false;
+        }
+        return true;
     }
 
 }

@@ -16,7 +16,7 @@ class Kofa implements \Controllers\IController {
 
     public function index($params) {
 //        echo '<pre>' . print_r($params, TRUE) . '</pre><br />';
-    echo 'Kofa is constructed inIndex';
+    echo 'Kofa is constructed in Admin';
 }
 public function roro(){
     echo 'Roro is called';
